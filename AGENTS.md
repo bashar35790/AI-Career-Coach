@@ -18,18 +18,16 @@ cp frontend/.env.example frontend/.env.local
 ## Development commands
 ```bash
 # Frontend (http://localhost:3000)
-cd frontend && npm run dev
+npm run dev          # (inside frontend/)
 
 # Backend (http://localhost:5000)
-cd backend && npm run dev
+npm run dev          # (inside backend/)
 
 # Typecheck both
-cd frontend && npm run typecheck
-cd backend && npm run typecheck
+npm run typecheck    # (inside each)
 
-# Lint
-cd frontend && npm run lint
-cd backend && npm run lint
+# Build both
+npm run build        # (inside each)
 ```
 
 ## Architecture

@@ -12,12 +12,11 @@ export default function ExplorePage() {
   const [sort, setSort] = useState('newest');
   const [page, setPage] = useState(1);
 
-  const params: Record<string, string> = {};
-  if (category && category !== 'All') params.category = category;
-  if (sort === 'popular') params.sort = 'rating';
-  params.page = String(page);
+  const queryCategory = category && category !== 'All' ? category : undefined;
+  const querySort = sort === 'popular' ? 'rating' : undefined;
+  const queryPage = page;
 
-  const { data, isLoading } = useItems(params);
+  const { data, isLoading, error } = useItems({ category: queryCategory, sort: querySort, page: queryPage });
 
   const items: Item[] = data?.items ?? [];
   const pagination = data?.pagination;
@@ -59,6 +58,12 @@ export default function ExplorePage() {
               </div>
             </div>
           ))}
+        </div>
+      ) : error ? (
+        <div className="text-center py-20 max-w-md mx-auto">
+          <p className="text-lg text-red-500 mb-2">Failed to load items</p>
+          <p className="text-text-muted text-sm mb-4">{(error as Error)?.message}</p>
+          <p className="text-xs text-text-muted">Make sure the backend is running at <code className="bg-surface-muted px-1 rounded">http://localhost:5000</code></p>
         </div>
       ) : items.length === 0 ? (
         <div className="text-center py-20 text-text-muted">

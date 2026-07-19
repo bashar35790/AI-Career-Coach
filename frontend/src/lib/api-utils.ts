@@ -28,13 +28,25 @@ export async function getMe() {
 }
 
 export async function fetchItems(params?: { category?: string; sort?: string; page?: number }) {
-  const res = await api.get<ApiResponse<{ items: Item[]; pagination: Pagination }>>('/items', { params });
-  return res.data.data!;
+  let res;
+  try {
+    res = await api.get('/items', { params });
+  } catch {
+    throw new Error(`Network Error - cannot reach backend at ${api.defaults.baseURL}/items`);
+  }
+  const body = res.data;
+  if (!body?.success || !body?.data) {
+    throw new Error(body?.error || 'Unexpected response format from server');
+  }
+  return body.data as { items: Item[]; pagination: Pagination };
 }
 
 export async function fetchItem(id: string) {
-  const res = await api.get<ApiResponse<Item>>(`/items/${id}`);
-  return res.data.data!;
+  const res = await api.get(`/items/${id}`);
+  if (!res.data?.success || !res.data?.data) {
+    throw new Error(res.data?.error || 'Failed to fetch item');
+  }
+  return res.data.data as Item;
 }
 
 export async function createItem(data: { title: string; shortDesc: string; fullDesc: string; price: number; category: string; image?: string }) {
@@ -59,8 +71,10 @@ export async function updateProfile(data: Partial<{ name: string; avatar: string
 
 export function useItems(params?: { category?: string; sort?: string; page?: number }) {
   return useQuery({
-    queryKey: ['items', params],
+    queryKey: ['items', params?.page ?? 1, params?.category ?? '', params?.sort ?? ''],
     queryFn: () => fetchItems(params),
+    staleTime: 30000,
+    retry: 1,
   });
 }
 

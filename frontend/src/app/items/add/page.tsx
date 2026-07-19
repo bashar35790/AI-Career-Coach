@@ -73,7 +73,7 @@ export default function AddItemPage() {
             <label className="block text-sm font-medium text-text mb-1">Full Description</label>
             <textarea name="fullDesc" value={form.fullDesc} onChange={handleChange} rows={5} className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 resize-y" placeholder="Detailed description" />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-text mb-1">Price ($)</label>
               <input name="price" type="number" min="0" step="0.01" value={form.price} onChange={handleChange} className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50" placeholder="0.00" />

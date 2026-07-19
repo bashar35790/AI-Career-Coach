@@ -66,7 +66,7 @@ export default function ResumeImproverPage() {
           <button
             type="submit"
             disabled={loading}
-            className="px-6 py-2.5 bg-primary text-white font-medium rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50"
+            className="w-full sm:w-auto px-6 py-2.5 bg-primary text-white font-medium rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50"
           >
             {loading ? 'Improving...' : 'Improve Resume'}
           </button>

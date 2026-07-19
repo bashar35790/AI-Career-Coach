@@ -102,14 +102,16 @@ export default function ProfilePage() {
             <div>
               <label className="block text-sm font-medium text-text mb-1">Name</label>
               {editName ? (
-                <div className="flex gap-2">
+                <div className="flex flex-col sm:flex-row gap-2">
                   <input value={name} onChange={(e) => setName(e.target.value)} className="flex-1 px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50" />
-                  <button onClick={handleUpdateProfile} disabled={updateProfile.isPending} className="px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary-dark disabled:opacity-50">
-                    Save
-                  </button>
-                  <button onClick={() => setEditName(false)} className="px-4 py-2 border border-border text-sm rounded-lg hover:bg-surface-muted">
-                    Cancel
-                  </button>
+                  <div className="flex gap-2">
+                    <button onClick={handleUpdateProfile} disabled={updateProfile.isPending} className="px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary-dark disabled:opacity-50">
+                      Save
+                    </button>
+                    <button onClick={() => setEditName(false)} className="px-4 py-2 border border-border text-sm rounded-lg hover:bg-surface-muted">
+                      Cancel
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <div className="flex items-center gap-2">
@@ -123,14 +125,16 @@ export default function ProfilePage() {
             <div>
               <label className="block text-sm font-medium text-text mb-1">Avatar URL</label>
               {editAvatar ? (
-                <div className="flex gap-2">
+                <div className="flex flex-col sm:flex-row gap-2">
                   <input value={avatar} onChange={(e) => setAvatar(e.target.value)} className="flex-1 px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50" placeholder="https://example.com/avatar.jpg" />
-                  <button onClick={handleUpdateProfile} disabled={updateProfile.isPending} className="px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary-dark disabled:opacity-50">
-                    Save
-                  </button>
-                  <button onClick={() => setEditAvatar(false)} className="px-4 py-2 border border-border text-sm rounded-lg hover:bg-surface-muted">
-                    Cancel
-                  </button>
+                  <div className="flex gap-2">
+                    <button onClick={handleUpdateProfile} disabled={updateProfile.isPending} className="px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary-dark disabled:opacity-50">
+                      Save
+                    </button>
+                    <button onClick={() => setEditAvatar(false)} className="px-4 py-2 border border-border text-sm rounded-lg hover:bg-surface-muted">
+                      Cancel
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <div className="flex items-center gap-2">

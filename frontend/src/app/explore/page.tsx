@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useItems } from '@/lib/api-utils';
 import type { Item } from '@/types';
 
@@ -63,7 +64,7 @@ export default function ExplorePage() {
         <div className="text-center py-20 max-w-md mx-auto">
           <p className="text-lg text-red-500 mb-2">Failed to load items</p>
           <p className="text-text-muted text-sm mb-4">{(error as Error)?.message}</p>
-          <p className="text-xs text-text-muted">Make sure the backend is running at <code className="bg-surface-muted px-1 rounded">http://localhost:5000</code></p>
+          <p className="text-xs text-text-muted">Make sure the backend is running.</p>
         </div>
       ) : items.length === 0 ? (
         <div className="text-center py-20 text-text-muted">
@@ -79,9 +80,9 @@ export default function ExplorePage() {
                 href={`/items/${item._id}`}
                 className="rounded-2xl border border-border overflow-hidden hover:shadow-md transition-shadow bg-white group"
               >
-                <div className="h-48 bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center">
+                <div className="h-48 bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center relative">
                   {item.image ? (
-                    <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+                    <Image src={item.image} alt={item.title} fill className="object-cover" />
                   ) : (
                     <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-lg">
                       {item.title[0]}
@@ -109,7 +110,7 @@ export default function ExplorePage() {
           </div>
 
           {pagination && pagination.pages > 1 && (
-            <div className="flex justify-center gap-2 mt-8">
+            <div className="flex justify-center gap-2 mt-8 flex-wrap">
               <button
                 onClick={() => setPage(Math.max(1, page - 1))}
                 disabled={page === 1}

@@ -83,7 +83,7 @@ export default function LandingPage() {
 
   return (
     <div className="flex flex-col">
-      <section className="min-h-[65vh] flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-emerald-50 px-4">
+      <section className="min-h-[65vh] py-16 flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-emerald-50 px-4">
         <div className="max-w-3xl text-center animate-fade-in">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-text leading-tight">
             Your AI-Powered{' '}

@@ -126,8 +126,9 @@ export default function ChatPage() {
         const convs = await fetchConversations();
         setConversations(convs);
       }
-    } catch (err: any) {
-      const msg = err.response?.data?.error || err.message || 'Sorry, I encountered an error. Please try again.';
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { error?: string } }; message?: string };
+      const msg = error.response?.data?.error || error.message || 'Sorry, I encountered an error. Please try again.';
       setMessages((prev) => [
         ...prev,
         { role: 'assistant', content: msg },

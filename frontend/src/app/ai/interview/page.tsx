@@ -120,7 +120,7 @@ export default function InterviewQuestionsPage() {
                     <span className="flex-shrink-0 w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs font-bold">
                       {i + 1}
                     </span>
-                    <span className="font-medium text-text">{qa.question}</span>
+                    <span className="font-medium text-text break-words">{qa.question}</span>
                   </div>
                   <svg
                     className={`w-5 h-5 text-text-muted transition-transform flex-shrink-0 ml-4 ${expanded === i ? 'rotate-180' : ''}`}

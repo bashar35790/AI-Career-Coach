@@ -2,6 +2,7 @@
 
 import { use } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useItem, useItems } from '@/lib/api-utils';
 
 export default function DetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -44,9 +45,9 @@ export default function DetailPage({ params }: { params: Promise<{ id: string }>
       </Link>
 
       <div className="bg-white rounded-2xl border border-border overflow-hidden">
-        <div className="h-64 sm:h-80 bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center">
+        <div className="h-64 sm:h-80 bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center relative">
           {item.image ? (
-            <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+            <Image src={item.image} alt={item.title} fill className="object-cover" />
           ) : (
             <div className="w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-3xl">
               {item.title[0]}

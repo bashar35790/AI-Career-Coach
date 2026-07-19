@@ -99,10 +99,10 @@ export default function RoadmapPage() {
             <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-primary/20" />
             <div className="space-y-8">
               {phases.map((phase, i) => (
-                <div key={i} className="relative pl-14">
+                <div key={i} className="relative pl-10 sm:pl-14">
                   <div className="absolute left-4 top-1 w-4 h-4 rounded-full bg-primary border-2 border-white shadow" />
                   <div className="bg-white rounded-2xl border border-border p-6">
-                    <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center justify-between mb-3 gap-2 flex-wrap">
                       <h3 className="text-lg font-semibold">{phase.title}</h3>
                       <span className="text-xs font-medium text-secondary bg-secondary/10 px-2 py-1 rounded-full">
                         {phase.duration}

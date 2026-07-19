@@ -16,8 +16,8 @@ export async function coverLetter(req: AuthRequest, res: Response) {
     }
 
     return sendSuccess(res, { content });
-  } catch (error) {
-    return sendError(res, 'Failed to generate cover letter', 500);
+  } catch (error: any) {
+    return sendError(res, error?.error?.message || error?.message || 'Failed to generate cover letter', 500);
   }
 }
 
@@ -28,8 +28,8 @@ export async function interviewQuestions(req: AuthRequest, res: Response) {
 
     const content = await generateInterviewQuestions({ role, experience: experience || 'mid-level', count: Math.min(count, 20) });
     return sendSuccess(res, { questions: JSON.parse(content) });
-  } catch (error) {
-    return sendError(res, 'Failed to generate questions', 500);
+  } catch (error: any) {
+    return sendError(res, error?.error?.message || error?.message || 'Failed to generate questions', 500);
   }
 }
 
@@ -40,8 +40,8 @@ export async function resumeImprove(req: AuthRequest, res: Response) {
 
     const improved = await improveResume({ content, targetRole });
     return sendSuccess(res, { improved });
-  } catch (error) {
-    return sendError(res, 'Failed to improve resume', 500);
+  } catch (error: any) {
+    return sendError(res, error?.error?.message || error?.message || 'Failed to improve resume', 500);
   }
 }
 
@@ -52,8 +52,9 @@ export async function roadmap(req: AuthRequest, res: Response) {
 
     const content = await generateRoadmap({ currentSkills, targetRole, timeline });
     return sendSuccess(res, { roadmap: JSON.parse(content) });
-  } catch (error) {
-    return sendError(res, 'Failed to generate roadmap', 500);
+  } catch (error: any) {
+    const message = error?.error?.message || error?.message || 'Failed to generate roadmap';
+    return sendError(res, message, 500);
   }
 }
 
@@ -97,11 +98,12 @@ export async function chat(req: AuthRequest, res: Response) {
 
     res.write(`data: ${JSON.stringify({ done: true, conversationId: conversation._id })}\n\n`);
     res.end();
-  } catch (error) {
+  } catch (error: any) {
+    const msg = error?.error?.message || error?.message || 'Chat failed';
     if (!res.headersSent) {
-      return sendError(res, 'Chat failed', 500);
+      return sendError(res, msg, 500);
     }
-    res.write(`data: ${JSON.stringify({ error: 'Chat failed' })}\n\n`);
+    res.write(`data: ${JSON.stringify({ error: msg })}\n\n`);
     res.end();
   }
 }
@@ -113,8 +115,8 @@ export async function resumeAnalyze(req: AuthRequest, res: Response) {
 
     const analysis = await analyzeResume(content);
     return sendSuccess(res, { analysis: JSON.parse(analysis) });
-  } catch (error) {
-    return sendError(res, 'Failed to analyze resume', 500);
+  } catch (error: any) {
+    return sendError(res, error?.error?.message || error?.message || 'Failed to analyze resume', 500);
   }
 }
 

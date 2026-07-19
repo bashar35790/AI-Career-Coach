@@ -32,8 +32,8 @@ export default function RoadmapPage() {
     try {
       const data = await generateRoadmap({ currentSkills, targetRole, timeline });
       setPhases(data.roadmap.phases);
-    } catch {
-      setError('Failed to generate roadmap. Check your API key and try again.');
+    } catch (err: unknown) {
+      setError((err as { response?: { data?: { error?: string } } })?.response?.data?.error || 'Failed to generate roadmap');
     } finally {
       setLoading(false);
     }

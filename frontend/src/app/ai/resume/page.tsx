@@ -25,8 +25,8 @@ export default function ResumeImproverPage() {
     try {
       const data = await improveResume({ content, targetRole: targetRole || undefined });
       setResult(data.improved);
-    } catch {
-      setError('Failed to improve resume. Check your API key and try again.');
+    } catch (err: unknown) {
+      setError((err as { response?: { data?: { error?: string } } })?.response?.data?.error || 'Failed to improve resume');
     } finally {
       setLoading(false);
     }

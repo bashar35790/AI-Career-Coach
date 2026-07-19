@@ -7,19 +7,16 @@ import { useAuth } from '@/store/auth-context';
 const loggedOutLinks = [
   { href: '/', label: 'Home' },
   { href: '/explore', label: 'Explore' },
+  { href: '/about', label: 'About' },
   { href: '/login', label: 'Login' },
   { href: '/register', label: 'Register' },
 ];
 
 const loggedInLinks = [
   { href: '/', label: 'Home' },
-  { href: '/explore', label: 'Explore' },
   { href: '/dashboard', label: 'Dashboard' },
-  { href: '/ai/resume', label: 'AI Resume' },
-  { href: '/ai/cover-letter', label: 'Cover Letter' },
-  { href: '/ai/interview', label: 'Interview' },
-  { href: '/ai/chat', label: 'AI Chat' },
-  { href: '/ai/roadmap', label: 'Roadmap' },
+  { href: '/explore', label: 'Explore' },
+  { href: '/profile', label: 'Profile' },
   { href: '/items/add', label: 'Add Item' },
   { href: '/items/manage', label: 'Manage Items' },
 ];

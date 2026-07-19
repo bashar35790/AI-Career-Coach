@@ -33,8 +33,8 @@ export default function InterviewQuestionsPage() {
     try {
       const data = await generateInterviewQuestions({ role, experience, count });
       setQuestions(data.questions);
-    } catch {
-      setError('Failed to generate questions. Check your API key and try again.');
+    } catch (err: unknown) {
+      setError((err as { response?: { data?: { error?: string } } })?.response?.data?.error || 'Failed to generate questions');
     } finally {
       setLoading(false);
     }

@@ -27,8 +27,8 @@ export default function CoverLetterPage() {
     try {
       const data = await generateCoverLetter({ jobTitle, company, skills, length });
       setResult(data.content);
-    } catch {
-      setError('Failed to generate cover letter. Check your API key and try again.');
+    } catch (err: unknown) {
+      setError((err as { response?: { data?: { error?: string } } })?.response?.data?.error || 'Failed to generate cover letter');
     } finally {
       setLoading(false);
     }

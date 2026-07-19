@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, startTransition, type ReactNode } from 'react';
 import api from '@/lib/api';
 import type { AuthUser } from '@/types';
 
@@ -15,52 +15,58 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-function getInitialToken(): string | null {
-  if (typeof window !== 'undefined') return localStorage.getItem('token');
-  return null;
-}
-
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
-  const [token, setToken] = useState<string | null>(getInitialToken);
-  const [loading, setLoading] = useState(() => !!getInitialToken());
+  const [token, setToken] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!token) return;
+    const stored = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    if (!stored) {
+      startTransition(() => setLoading(false));
+      return;
+    }
+
     let cancelled = false;
+    startTransition(() => setToken(stored));
     api.get('/auth/me')
       .then((res) => {
-        if (!cancelled) setUser(res.data.data);
+        if (!cancelled) startTransition(() => setUser(res.data.data));
       })
       .catch(() => {
         if (!cancelled) {
           localStorage.removeItem('token');
-          setToken(null);
+          startTransition(() => setToken(null));
         }
       })
       .finally(() => {
-        if (!cancelled) setLoading(false);
+        if (!cancelled) startTransition(() => setLoading(false));
       });
     return () => { cancelled = true; };
-  }, [token]);
+  }, []);
 
   const login = useCallback((newToken: string, newUser: AuthUser) => {
     localStorage.setItem('token', newToken);
-    setToken(newToken);
-    setUser(newUser);
+    startTransition(() => {
+      setToken(newToken);
+      setUser(newUser);
+      setLoading(false);
+    });
   }, []);
 
   const logout = useCallback(() => {
     localStorage.removeItem('token');
-    setToken(null);
-    setUser(null);
-    setLoading(false);
+    startTransition(() => {
+      setToken(null);
+      setUser(null);
+      setLoading(false);
+    });
   }, []);
 
   const refreshUser = useCallback(async () => {
     try {
       const res = await api.get('/auth/me');
-      setUser(res.data.data);
+      startTransition(() => setUser(res.data.data));
     } catch {
       logout();
     }

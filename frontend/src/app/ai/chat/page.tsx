@@ -116,10 +116,11 @@ export default function ChatPage() {
         const convs = await fetchConversations();
         setConversations(convs);
       }
-    } catch {
+    } catch (err: unknown) {
+      const msg = (err as { response?: { data?: { error?: string } } })?.response?.data?.error || 'Sorry, I encountered an error. Please try again.';
       setMessages((prev) => [
         ...prev,
-        { role: 'assistant', content: 'Sorry, I encountered an error. Please try again.' },
+        { role: 'assistant', content: msg },
       ]);
     } finally {
       setLoading(false);

@@ -1,5 +1,5 @@
 import api from './api';
-import type { ApiResponse, AuthResponse, AuthUser, Item, Pagination } from '@/types';
+import type { ApiResponse, AuthResponse, AuthUser, Item, Pagination, UserProfile, Skill } from '@/types';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 export async function loginUser(email: string, password: string) {
@@ -60,7 +60,7 @@ export async function deleteItem(id: string) {
 }
 
 export async function getProfile() {
-  const res = await api.get<ApiResponse<AuthUser>>('/users/profile');
+  const res = await api.get<ApiResponse<UserProfile>>('/users/profile');
   return res.data.data!;
 }
 
@@ -106,6 +106,40 @@ export function useProfile() {
   return useQuery({
     queryKey: ['profile'],
     queryFn: getProfile,
+  });
+}
+
+export function useUpdateProfile() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (data: { name?: string; avatar?: string }) => updateProfile(data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['profile'] }),
+  });
+}
+
+export async function addSkillApi(data: { name: string; level: string; category: string }) {
+  const res = await api.post<ApiResponse<Skill>>('/users/skills', data);
+  return res.data.data!;
+}
+
+export function useAddSkill() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: addSkillApi,
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['profile'] }),
+  });
+}
+
+export async function uploadResumeApi(content: string) {
+  const res = await api.post<ApiResponse<{ content: string }>>('/users/resume', { content });
+  return res.data.data!;
+}
+
+export function useUploadResume() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: uploadResumeApi,
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['profile'] }),
   });
 }
 

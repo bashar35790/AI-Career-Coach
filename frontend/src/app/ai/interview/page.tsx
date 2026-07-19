@@ -47,10 +47,10 @@ export default function InterviewQuestionsPage() {
         <p className="text-text-muted mb-8">Generate realistic interview questions with sample answers.</p>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg">{error}</div>
+          <div className="mb-4 p-3 bg-red-950/50 border border-red-900 text-red-400 text-sm rounded-lg">{error}</div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4 mb-8 bg-white rounded-2xl border border-border p-6">
+        <form onSubmit={handleSubmit} className="space-y-4 mb-8 bg-zinc-900 rounded-2xl border border-border p-6">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium text-text mb-1">Target Role</label>
@@ -67,7 +67,7 @@ export default function InterviewQuestionsPage() {
               <select
                 value={experience}
                 onChange={(e) => setExperience(e.target.value)}
-                className="w-full px-3 py-2 border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary/50"
+                className="w-full px-3 py-2 border border-border rounded-lg bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
                 <option value="entry-level">Entry Level</option>
                 <option value="mid-level">Mid Level</option>
@@ -80,7 +80,7 @@ export default function InterviewQuestionsPage() {
               <select
                 value={count}
                 onChange={(e) => setCount(Number(e.target.value))}
-                className="w-full px-3 py-2 border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary/50"
+                className="w-full px-3 py-2 border border-border rounded-lg bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
                 <option value={5}>5</option>
                 <option value={10}>10</option>
@@ -111,7 +111,7 @@ export default function InterviewQuestionsPage() {
               </button>
             </div>
             {questions.map((qa, i) => (
-              <div key={i} className="bg-white rounded-2xl border border-border overflow-hidden">
+              <div key={i} className="bg-zinc-900 rounded-2xl border border-border overflow-hidden">
                 <button
                   onClick={() => setExpanded(expanded === i ? null : i)}
                   className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-surface-muted transition-colors"

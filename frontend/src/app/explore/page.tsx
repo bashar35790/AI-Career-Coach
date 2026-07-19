@@ -30,7 +30,7 @@ export default function ExplorePage() {
           <select
             value={category}
             onChange={(e) => { setCategory(e.target.value); setPage(1); }}
-            className="px-3 py-2 border border-border rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary/50"
+            className="px-3 py-2 border border-border rounded-lg text-sm bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-primary/50"
           >
             {categories.map((c) => (
               <option key={c} value={c === 'All' ? '' : c}>{c}</option>
@@ -39,7 +39,7 @@ export default function ExplorePage() {
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value)}
-            className="px-3 py-2 border border-border rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary/50"
+            className="px-3 py-2 border border-border rounded-lg text-sm bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-primary/50"
           >
             <option value="newest">Newest</option>
             <option value="popular">Most Popular</option>
@@ -51,11 +51,11 @@ export default function ExplorePage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {Array.from({ length: 8 }).map((_, i) => (
             <div key={i} className="rounded-2xl border border-border overflow-hidden animate-pulse">
-              <div className="h-48 bg-gray-200" />
+              <div className="h-48 bg-zinc-800" />
               <div className="p-4 space-y-3">
-                <div className="h-4 bg-gray-200 rounded w-3/4" />
-                <div className="h-3 bg-gray-200 rounded w-full" />
-                <div className="h-3 bg-gray-200 rounded w-1/2" />
+                <div className="h-4 bg-zinc-800 rounded w-3/4" />
+                <div className="h-3 bg-zinc-800 rounded w-full" />
+                <div className="h-3 bg-zinc-800 rounded w-1/2" />
               </div>
             </div>
           ))}
@@ -78,7 +78,7 @@ export default function ExplorePage() {
               <Link
                 key={item._id}
                 href={`/items/${item._id}`}
-                className="rounded-2xl border border-border overflow-hidden hover:shadow-md transition-shadow bg-white group"
+                className="rounded-2xl border border-border overflow-hidden hover:shadow-md transition-shadow bg-zinc-900 group"
               >
                 <div className="h-48 bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center relative">
                   {item.image ? (

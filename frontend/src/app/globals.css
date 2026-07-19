@@ -8,11 +8,11 @@
   --color-secondary-dark: #059669;
   --color-accent: #F59E0B;
   --color-accent-dark: #D97706;
-  --color-surface: #FFFFFF;
-  --color-surface-muted: #F8FAFC;
-  --color-border: #E2E8F0;
-  --color-text: #1E293B;
-  --color-text-muted: #64748B;
+  --color-surface: #000000;
+  --color-surface-muted: #09090B;
+  --color-border: #27272A;
+  --color-text: #FAFAFA;
+  --color-text-muted: #A1A1AA;
   --font-sans: var(--font-inter);
 }
 

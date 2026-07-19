@@ -57,10 +57,10 @@ export default function AddItemPage() {
         <h1 className="text-3xl font-bold mb-8">Add New Item</h1>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg">{error}</div>
+          <div className="mb-4 p-3 bg-red-950/50 border border-red-900 text-red-400 text-sm rounded-lg">{error}</div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-5 bg-white rounded-2xl border border-border p-6">
+        <form onSubmit={handleSubmit} className="space-y-5 bg-zinc-900 rounded-2xl border border-border p-6">
           <div>
             <label className="block text-sm font-medium text-text mb-1">Title</label>
             <input name="title" value={form.title} onChange={handleChange} className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50" placeholder="Item title" />
@@ -80,7 +80,7 @@ export default function AddItemPage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-text mb-1">Category</label>
-              <select name="category" value={form.category} onChange={handleChange} className="w-full px-3 py-2 border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary/50">
+              <select name="category" value={form.category} onChange={handleChange} className="w-full px-3 py-2 border border-border rounded-lg bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-primary/50">
                 <option value="">Select...</option>
                 {categories.map((c) => (
                   <option key={c} value={c}>{c}</option>

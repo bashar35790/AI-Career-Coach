@@ -52,11 +52,11 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-[calc(100vh-8rem)] flex items-center justify-center px-4">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-sm border border-border p-8">
+      <div className="w-full max-w-md bg-zinc-900 rounded-2xl shadow-sm border border-border p-8">
         <h1 className="text-2xl font-bold text-center mb-6">Create Account</h1>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg">
+          <div className="mb-4 p-3 bg-red-950/50 border border-red-900 text-red-400 text-sm rounded-lg">
             {error}
           </div>
         )}

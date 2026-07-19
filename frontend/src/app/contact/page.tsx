@@ -19,14 +19,14 @@ export default function ContactPage() {
       <p className="text-text-muted mb-8">Have a question or feedback? We&apos;d love to hear from you.</p>
 
       {sent ? (
-        <div className="p-6 bg-emerald-50 border border-emerald-200 rounded-2xl text-center">
-          <p className="text-emerald-600 font-medium">Message sent! We&apos;ll get back to you soon.</p>
+        <div className="p-6 bg-emerald-950/50 border border-emerald-900 rounded-2xl text-center">
+          <p className="text-emerald-400 font-medium">Message sent! We&apos;ll get back to you soon.</p>
           <button onClick={() => { setSent(false); setName(''); setEmail(''); setMessage(''); }} className="mt-4 text-sm text-primary hover:underline">
             Send another message
           </button>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="space-y-4 bg-white rounded-2xl border border-border p-6">
+        <form onSubmit={handleSubmit} className="space-y-4 bg-zinc-900 rounded-2xl border border-border p-6">
           <div>
             <label className="block text-sm font-medium text-text mb-1">Name</label>
             <input value={name} onChange={(e) => setName(e.target.value)} required className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50" />

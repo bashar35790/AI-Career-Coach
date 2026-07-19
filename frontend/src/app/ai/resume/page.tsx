@@ -39,7 +39,7 @@ export default function ResumeImproverPage() {
         <p className="text-text-muted mb-8">Paste your resume below and get AI-powered improvement suggestions.</p>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg">{error}</div>
+          <div className="mb-4 p-3 bg-red-950/50 border border-red-900 text-red-400 text-sm rounded-lg">{error}</div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4 mb-8">
@@ -73,7 +73,7 @@ export default function ResumeImproverPage() {
         </form>
 
         {result && (
-          <div className="bg-white rounded-2xl border border-border p-6">
+          <div className="bg-zinc-900 rounded-2xl border border-border p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold">Improved Resume</h2>
               <div className="flex gap-2">

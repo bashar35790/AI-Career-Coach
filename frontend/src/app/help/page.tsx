@@ -22,7 +22,7 @@ export default function HelpPage() {
 
       <div className="space-y-3">
         {helpTopics.map((topic, i) => (
-          <div key={i} className="bg-white rounded-2xl border border-border overflow-hidden">
+          <div key={i} className="bg-zinc-900 rounded-2xl border border-border overflow-hidden">
             <button
               onClick={() => setOpenIndex(openIndex === i ? null : i)}
               className="w-full px-6 py-4 flex items-center justify-between text-left font-medium hover:bg-surface-muted transition-colors"

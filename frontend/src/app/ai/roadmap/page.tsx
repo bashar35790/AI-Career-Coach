@@ -46,10 +46,10 @@ export default function RoadmapPage() {
         <p className="text-text-muted mb-8">Get a personalized step-by-step career roadmap based on your skills and goals.</p>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg">{error}</div>
+          <div className="mb-4 p-3 bg-red-950/50 border border-red-900 text-red-400 text-sm rounded-lg">{error}</div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4 mb-8 bg-white rounded-2xl border border-border p-6">
+        <form onSubmit={handleSubmit} className="space-y-4 mb-8 bg-zinc-900 rounded-2xl border border-border p-6">
           <div>
             <label className="block text-sm font-medium text-text mb-1">Current Skills</label>
             <textarea
@@ -76,7 +76,7 @@ export default function RoadmapPage() {
               <select
                 value={timeline}
                 onChange={(e) => setTimeline(e.target.value)}
-                className="w-full px-3 py-2 border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary/50"
+                className="w-full px-3 py-2 border border-border rounded-lg bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
                 <option value="3 months">3 Months</option>
                 <option value="6 months">6 Months</option>
@@ -101,7 +101,7 @@ export default function RoadmapPage() {
               {phases.map((phase, i) => (
                 <div key={i} className="relative pl-10 sm:pl-14">
                   <div className="absolute left-4 top-1 w-4 h-4 rounded-full bg-primary border-2 border-white shadow" />
-                  <div className="bg-white rounded-2xl border border-border p-6">
+                  <div className="bg-zinc-900 rounded-2xl border border-border p-6">
                     <div className="flex items-center justify-between mb-3 gap-2 flex-wrap">
                       <h3 className="text-lg font-semibold">{phase.title}</h3>
                       <span className="text-xs font-medium text-secondary bg-secondary/10 px-2 py-1 rounded-full">

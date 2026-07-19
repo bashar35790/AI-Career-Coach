@@ -15,11 +15,11 @@ export default function DetailPage({ params }: { params: Promise<{ id: string }>
   if (isLoading) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-8 animate-pulse">
-        <div className="h-64 bg-gray-200 rounded-2xl mb-8" />
-        <div className="h-8 bg-gray-200 rounded w-1/2 mb-4" />
-        <div className="h-4 bg-gray-200 rounded w-3/4 mb-2" />
-        <div className="h-4 bg-gray-200 rounded w-full mb-2" />
-        <div className="h-4 bg-gray-200 rounded w-full mb-2" />
+        <div className="h-64 bg-zinc-800 rounded-2xl mb-8" />
+        <div className="h-8 bg-zinc-800 rounded w-1/2 mb-4" />
+        <div className="h-4 bg-zinc-800 rounded w-3/4 mb-2" />
+        <div className="h-4 bg-zinc-800 rounded w-full mb-2" />
+        <div className="h-4 bg-zinc-800 rounded w-full mb-2" />
       </div>
     );
   }
@@ -44,7 +44,7 @@ export default function DetailPage({ params }: { params: Promise<{ id: string }>
         &larr; Back to Explore
       </Link>
 
-      <div className="bg-white rounded-2xl border border-border overflow-hidden">
+      <div className="bg-zinc-900 rounded-2xl border border-border overflow-hidden">
         <div className="h-64 sm:h-80 bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center relative">
           {item.image ? (
             <Image src={item.image} alt={item.title} fill className="object-cover" />
@@ -95,7 +95,7 @@ export default function DetailPage({ params }: { params: Promise<{ id: string }>
               <Link
                 key={r._id}
                 href={`/items/${r._id}`}
-                className="rounded-xl border border-border p-4 hover:shadow-md transition-shadow bg-white"
+                className="rounded-xl border border-border p-4 hover:shadow-md transition-shadow bg-zinc-900"
               >
                 <span className="text-xs font-medium text-primary bg-primary/10 px-2 py-1 rounded-full">
                   {r.category}

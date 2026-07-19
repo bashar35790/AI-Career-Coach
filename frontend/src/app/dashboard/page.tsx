@@ -46,22 +46,22 @@ export default function DashboardPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-2xl border border-border p-6">
+          <div className="bg-zinc-900 rounded-2xl border border-border p-6">
             <p className="text-sm text-text-muted">Skills Added</p>
             <p className="text-3xl font-bold mt-1">{profileLoading ? '...' : profile?.skills?.length ?? 0}</p>
           </div>
-          <div className="bg-white rounded-2xl border border-border p-6">
+          <div className="bg-zinc-900 rounded-2xl border border-border p-6">
             <p className="text-sm text-text-muted">Total Items</p>
             <p className="text-3xl font-bold mt-1">{itemsData?.pagination?.total ?? 0}</p>
           </div>
-          <div className="bg-white rounded-2xl border border-border p-6">
+          <div className="bg-zinc-900 rounded-2xl border border-border p-6">
             <p className="text-sm text-text-muted">Resume</p>
             <p className="text-3xl font-bold mt-1">{profile?.resume ? 'Uploaded' : '—'}</p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-          <div className="lg:col-span-2 bg-white rounded-2xl border border-border p-6">
+          <div className="lg:col-span-2 bg-zinc-900 rounded-2xl border border-border p-6">
             <h2 className="text-lg font-semibold mb-4">Activity Trend</h2>
             <div className="h-52 sm:h-64">
               <ResponsiveContainer width="100%" height="100%">
@@ -72,9 +72,9 @@ export default function DashboardPage() {
                       <stop offset="95%" stopColor="#4F46E5" stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
-                  <XAxis dataKey="month" tick={{ fontSize: 12, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                  <YAxis tick={{ fontSize: 12, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#27272A" />
+                  <XAxis dataKey="month" tick={{ fontSize: 12, fill: '#A1A1AA' }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize: 12, fill: '#A1A1AA' }} axisLine={false} tickLine={false} />
                   <Tooltip />
                   <Area type="monotone" dataKey="activity" stroke="#4F46E5" strokeWidth={2} fill="url(#colorActivity)" />
                 </AreaChart>
@@ -82,12 +82,12 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl border border-border p-6">
+          <div className="bg-zinc-900 rounded-2xl border border-border p-6">
             <h2 className="text-lg font-semibold mb-4">Skills</h2>
             {profileLoading ? (
               <div className="space-y-2">
                 {Array.from({ length: 4 }).map((_, i) => (
-                  <div key={i} className="h-8 bg-gray-200 rounded-lg animate-pulse" />
+                  <div key={i} className="h-8 bg-zinc-800 rounded-lg animate-pulse" />
                 ))}
               </div>
             ) : profile?.skills?.length === 0 ? (
@@ -118,7 +118,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl border border-border p-6">
+        <div className="bg-zinc-900 rounded-2xl border border-border p-6">
           <h2 className="text-lg font-semibold mb-4">AI Tools</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {aiTools.map((tool) => (

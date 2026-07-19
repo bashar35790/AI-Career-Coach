@@ -35,7 +35,7 @@ export default function ManageItemsPage() {
         {isLoading ? (
           <div className="space-y-3">
             {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="h-16 bg-gray-200 rounded-xl animate-pulse" />
+              <div key={i} className="h-16 bg-zinc-800 rounded-xl animate-pulse" />
             ))}
           </div>
         ) : items.length === 0 ? (
@@ -47,7 +47,7 @@ export default function ManageItemsPage() {
             </Link>
           </div>
         ) : (
-          <div className="bg-white rounded-2xl border border-border overflow-hidden">
+          <div className="bg-zinc-900 rounded-2xl border border-border overflow-hidden">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-border bg-surface-muted text-left text-sm font-medium text-text-muted">
@@ -79,7 +79,7 @@ export default function ManageItemsPage() {
                         <button
                           onClick={() => handleDelete(item._id)}
                           disabled={deleteItem.isPending}
-                          className="px-3 py-1.5 text-xs font-medium text-red-600 border border-red-200 rounded-lg hover:bg-red-50 transition-colors disabled:opacity-50"
+                          className="px-3 py-1.5 text-xs font-medium text-red-400 border border-red-900 rounded-lg hover:bg-red-950/50 transition-colors disabled:opacity-50"
                         >
                           Delete
                         </button>

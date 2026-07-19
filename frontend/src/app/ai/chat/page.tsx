@@ -152,7 +152,7 @@ export default function ChatPage() {
 
         {/* Sidebar */}
         <div 
-          className={`fixed inset-y-0 left-0 z-40 w-72 border-r border-border bg-white overflow-y-auto transform transition-transform duration-300 ease-in-out ${
+          className={`fixed inset-y-0 left-0 z-40 w-72 border-r border-border bg-zinc-900 overflow-y-auto transform transition-transform duration-300 ease-in-out ${
             sidebarOpen ? 'translate-x-0' : '-translate-x-full'
           } md:translate-x-0 md:relative md:h-full`}
         >
@@ -185,7 +185,7 @@ export default function ChatPage() {
         </div>
 
         <div className="flex-1 flex flex-col min-w-0 bg-surface">
-          <div className="md:hidden px-4 py-3 border-b border-border bg-white flex items-center shadow-sm z-10">
+          <div className="md:hidden px-4 py-3 border-b border-border bg-zinc-900 flex items-center shadow-sm z-10">
             <button
               onClick={() => setSidebarOpen(true)}
               className="p-2 -ml-2 text-primary rounded-lg hover:bg-primary/10 transition-colors"
@@ -218,7 +218,7 @@ export default function ChatPage() {
                         onClick={() => {
                           setInput(suggestion);
                         }}
-                        className="block w-full text-left px-4 py-2.5 bg-white border border-border rounded-xl text-sm text-text-muted hover:border-primary hover:text-primary transition-colors"
+                        className="block w-full text-left px-4 py-2.5 bg-zinc-900 border border-border rounded-xl text-sm text-text-muted hover:border-primary hover:text-primary transition-colors"
                       >
                         {suggestion}
                       </button>
@@ -233,7 +233,7 @@ export default function ChatPage() {
                   className={`max-w-[80%] rounded-2xl px-4 py-3 ${
                     msg.role === 'user'
                       ? 'bg-primary text-white'
-                      : 'bg-white border border-border text-text'
+                      : 'bg-zinc-900 border border-border text-text'
                   }`}
                 >
                   <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
@@ -242,7 +242,7 @@ export default function ChatPage() {
             ))}
             {streaming && (
               <div className="flex justify-start">
-                <div className="bg-white border border-border rounded-2xl px-4 py-3">
+                <div className="bg-zinc-900 border border-border rounded-2xl px-4 py-3">
                   <div className="flex gap-1">
                     <span className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
                     <span className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
@@ -254,7 +254,7 @@ export default function ChatPage() {
             <div ref={messagesEndRef} />
           </div>
 
-          <div className="border-t border-border bg-white p-4">
+          <div className="border-t border-border bg-zinc-900 p-4">
             <form onSubmit={handleSubmit} className="flex gap-3 max-w-4xl mx-auto">
               <input
                 type="text"

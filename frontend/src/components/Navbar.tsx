@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/store/auth-context';
 
@@ -24,14 +24,30 @@ const loggedInLinks = [
 export default function Navbar() {
   const { user, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const links = user ? loggedInLinks : loggedOutLinks;
 
   return (
-    <nav className="sticky top-0 z-50 bg-white border-b border-border shadow-sm">
+    <nav
+      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? 'bg-black/80 backdrop-blur-lg border-b border-border shadow-sm'
+          : 'bg-transparent'
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <Link href="/" className="text-xl font-bold text-primary">
+          <Link
+            href="/"
+            className="text-xl font-bold bg-gradient-to-r from-primary via-primary-light to-secondary bg-clip-text text-transparent"
+          >
             AI Career Coach
           </Link>
 
@@ -59,13 +75,20 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
-            {user && (
+            {user ? (
               <button
                 onClick={logout}
                 className="text-sm font-medium text-red-500 hover:text-red-600 transition-colors"
               >
                 Logout
               </button>
+            ) : (
+              <Link
+                href="/register"
+                className="text-sm font-semibold px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
+              >
+                Get Started
+              </Link>
             )}
           </div>
         </div>
@@ -82,13 +105,21 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
-            {user && (
+            {user ? (
               <button
                 onClick={() => { logout(); setMenuOpen(false); }}
                 className="block w-full text-left px-3 py-2 text-sm font-medium text-red-500 hover:bg-surface-muted rounded-md transition-colors"
               >
                 Logout
               </button>
+            ) : (
+              <Link
+                href="/register"
+                className="block px-3 py-2 text-sm font-semibold text-primary hover:bg-surface-muted rounded-md transition-colors"
+                onClick={() => setMenuOpen(false)}
+              >
+                Get Started
+              </Link>
             )}
           </div>
         )}

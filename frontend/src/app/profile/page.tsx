@@ -70,9 +70,9 @@ export default function ProfilePage() {
     return (
       <AuthGuard>
         <div className="max-w-4xl mx-auto px-4 py-8 animate-pulse space-y-6">
-          <div className="h-8 bg-gray-200 rounded w-1/3" />
-          <div className="h-48 bg-gray-200 rounded-2xl" />
-          <div className="h-48 bg-gray-200 rounded-2xl" />
+          <div className="h-8 bg-zinc-800 rounded w-1/3" />
+          <div className="h-48 bg-zinc-800 rounded-2xl" />
+          <div className="h-48 bg-zinc-800 rounded-2xl" />
         </div>
       </AuthGuard>
     );
@@ -87,10 +87,10 @@ export default function ProfilePage() {
       <div className="max-w-4xl mx-auto px-4 py-8 space-y-8">
         <h1 className="text-3xl font-bold">Profile</h1>
 
-        <div className="bg-white rounded-2xl border border-border p-6">
+        <div className="bg-zinc-900 rounded-2xl border border-border p-6">
           <h2 className="text-lg font-semibold mb-4">Personal Info</h2>
           {profileMsg && (
-            <div className="mb-4 p-3 bg-emerald-50 border border-emerald-200 text-emerald-600 text-sm rounded-lg">
+            <div className="mb-4 p-3 bg-emerald-950/50 border border-emerald-900 text-emerald-400 text-sm rounded-lg">
               {profileMsg}
             </div>
           )}
@@ -148,10 +148,10 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl border border-border p-6">
+        <div className="bg-zinc-900 rounded-2xl border border-border p-6">
           <h2 className="text-lg font-semibold mb-4">Skills</h2>
           {skillMsg && (
-            <div className="mb-4 p-3 bg-emerald-50 border border-emerald-200 text-emerald-600 text-sm rounded-lg">
+            <div className="mb-4 p-3 bg-emerald-950/50 border border-emerald-900 text-emerald-400 text-sm rounded-lg">
               {skillMsg}
             </div>
           )}
@@ -169,10 +169,10 @@ export default function ProfilePage() {
 
           <form onSubmit={handleAddSkill} className="grid grid-cols-1 sm:grid-cols-4 gap-3">
             <input value={skillName} onChange={(e) => setSkillName(e.target.value)} placeholder="Skill name" className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/50" />
-            <select value={skillLevel} onChange={(e) => setSkillLevel(e.target.value)} className="px-3 py-2 border border-border rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary/50">
+            <select value={skillLevel} onChange={(e) => setSkillLevel(e.target.value)} className="px-3 py-2 border border-border rounded-lg text-sm bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-primary/50">
               {skillLevels.map((l) => <option key={l} value={l} className="capitalize">{l}</option>)}
             </select>
-            <select value={skillCategory} onChange={(e) => setSkillCategory(e.target.value)} className="px-3 py-2 border border-border rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary/50">
+            <select value={skillCategory} onChange={(e) => setSkillCategory(e.target.value)} className="px-3 py-2 border border-border rounded-lg text-sm bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-primary/50">
               {skillCategories.map((c) => <option key={c} value={c}>{c}</option>)}
             </select>
             <button type="submit" disabled={addSkill.isPending || !skillName.trim()} className="px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary-dark disabled:opacity-50">
@@ -181,7 +181,7 @@ export default function ProfilePage() {
           </form>
         </div>
 
-        <div className="bg-white rounded-2xl border border-border p-6">
+        <div className="bg-zinc-900 rounded-2xl border border-border p-6">
           <h2 className="text-lg font-semibold mb-4">Resume</h2>
           {resume && (
             <div className="mb-4 p-3 bg-surface-muted rounded-xl">
@@ -192,7 +192,7 @@ export default function ProfilePage() {
             </div>
           )}
           {resumeMsg && (
-            <div className="mb-4 p-3 bg-emerald-50 border border-emerald-200 text-emerald-600 text-sm rounded-lg">
+            <div className="mb-4 p-3 bg-emerald-950/50 border border-emerald-900 text-emerald-400 text-sm rounded-lg">
               {resumeMsg}
             </div>
           )}

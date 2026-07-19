@@ -73,7 +73,14 @@ export default function ChatPage() {
         body: JSON.stringify({ message: userMessage, conversationId }),
       });
 
-      if (!res.ok) throw new Error('Chat failed');
+      if (!res.ok) {
+        let errMsg = 'Chat failed';
+        try {
+          const errData = await res.json();
+          if (errData.error) errMsg = errData.error;
+        } catch {}
+        throw new Error(errMsg);
+      }
 
       const reader = res.body?.getReader();
       if (!reader) throw new Error('No reader');
@@ -102,6 +109,9 @@ export default function ChatPage() {
                 return updated;
               });
             }
+            if (parsed.error) {
+              throw new Error(parsed.error);
+            }
             if (parsed.done) {
               newConvId = parsed.conversationId;
             }
@@ -116,8 +126,8 @@ export default function ChatPage() {
         const convs = await fetchConversations();
         setConversations(convs);
       }
-    } catch (err: unknown) {
-      const msg = (err as { response?: { data?: { error?: string } } })?.response?.data?.error || 'Sorry, I encountered an error. Please try again.';
+    } catch (err: any) {
+      const msg = err.response?.data?.error || err.message || 'Sorry, I encountered an error. Please try again.';
       setMessages((prev) => [
         ...prev,
         { role: 'assistant', content: msg },
@@ -130,8 +140,21 @@ export default function ChatPage() {
 
   return (
     <AuthGuard>
-      <div className="flex h-[calc(100vh-8rem)]">
-        <div className={`${sidebarOpen ? 'block' : 'hidden'} md:block w-72 flex-shrink-0 border-r border-border bg-white overflow-y-auto`}>
+      <div className="flex h-[calc(100vh-8rem)] relative">
+        {/* Mobile Overlay */}
+        {sidebarOpen && (
+          <div 
+            className="fixed inset-0 bg-black/20 z-30 md:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+
+        {/* Sidebar */}
+        <div 
+          className={`fixed inset-y-0 left-0 z-40 w-72 border-r border-border bg-white overflow-y-auto transform transition-transform duration-300 ease-in-out ${
+            sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          } md:translate-x-0 md:relative md:h-full`}
+        >
           <div className="p-4 border-b border-border">
             <button
               onClick={newConversation}
@@ -160,14 +183,18 @@ export default function ChatPage() {
           </div>
         </div>
 
-        <div className="flex-1 flex flex-col max-w-full">
-          <div className="md:hidden px-4 py-2 border-b border-border">
+        <div className="flex-1 flex flex-col min-w-0 bg-surface">
+          <div className="md:hidden px-4 py-3 border-b border-border bg-white flex items-center shadow-sm z-10">
             <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="text-sm text-primary font-medium"
+              onClick={() => setSidebarOpen(true)}
+              className="p-2 -ml-2 text-primary rounded-lg hover:bg-primary/10 transition-colors"
+              aria-label="Open sidebar"
             >
-              {sidebarOpen ? 'Close History' : 'Conversations'}
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
             </button>
+            <span className="ml-2 font-semibold text-text">Conversations</span>
           </div>
 
           <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4">

@@ -27,7 +27,9 @@ export async function interviewQuestions(req: AuthRequest, res: Response) {
     if (!role) return sendError(res, 'Role is required');
 
     const content = await generateInterviewQuestions({ role, experience: experience || 'mid-level', count: Math.min(count, 20) });
-    return sendSuccess(res, { questions: JSON.parse(content) });
+    const parsed = JSON.parse(content);
+    const questionsArr = Array.isArray(parsed) ? parsed : (parsed.questions || []);
+    return sendSuccess(res, { questions: questionsArr });
   } catch (error: any) {
     return sendError(res, error?.error?.message || error?.message || 'Failed to generate questions', 500);
   }
@@ -51,7 +53,8 @@ export async function roadmap(req: AuthRequest, res: Response) {
     if (!currentSkills || !targetRole) return sendError(res, 'Current skills and target role are required');
 
     const content = await generateRoadmap({ currentSkills, targetRole, timeline });
-    return sendSuccess(res, { roadmap: JSON.parse(content) });
+    const parsed = JSON.parse(content);
+    return sendSuccess(res, { roadmap: parsed.roadmap || parsed });
   } catch (error: any) {
     const message = error?.error?.message || error?.message || 'Failed to generate roadmap';
     return sendError(res, message, 500);

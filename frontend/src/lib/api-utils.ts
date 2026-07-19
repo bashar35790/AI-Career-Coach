@@ -108,3 +108,35 @@ export function useProfile() {
     queryFn: getProfile,
   });
 }
+
+// ── AI Feature API functions ──
+
+export async function generateCoverLetter(data: { jobTitle: string; company: string; skills?: string; length?: string }) {
+  const res = await api.post<ApiResponse<{ content: string }>>('/ai/cover-letter', data);
+  return res.data.data!;
+}
+
+export async function generateInterviewQuestions(data: { role: string; experience?: string; count?: number }) {
+  const res = await api.post<ApiResponse<{ questions: { question: string; answer: string }[] }>>('/ai/interview-questions', data);
+  return res.data.data!;
+}
+
+export async function improveResume(data: { content: string; targetRole?: string }) {
+  const res = await api.post<ApiResponse<{ improved: string }>>('/ai/improve-resume', data);
+  return res.data.data!;
+}
+
+export async function generateRoadmap(data: { currentSkills: string; targetRole: string; timeline?: string }) {
+  const res = await api.post<ApiResponse<{ roadmap: { phases: { title: string; duration: string; tasks: string[] }[] } }>>('/ai/roadmap', data);
+  return res.data.data!;
+}
+
+export async function fetchConversations() {
+  const res = await api.get<ApiResponse<{ _id: string; title: string; createdAt: string }[]>>('/ai/conversations');
+  return res.data.data!;
+}
+
+export async function fetchConversation(id: string) {
+  const res = await api.get<ApiResponse<{ _id: string; title: string; messages: { role: string; content: string; timestamp: string }[] }>>(`/ai/conversations/${id}`);
+  return res.data.data!;
+}

@@ -15,6 +15,11 @@ const loggedInLinks = [
   { href: '/', label: 'Home' },
   { href: '/explore', label: 'Explore' },
   { href: '/dashboard', label: 'Dashboard' },
+  { href: '/ai/resume', label: 'AI Resume' },
+  { href: '/ai/cover-letter', label: 'Cover Letter' },
+  { href: '/ai/interview', label: 'Interview' },
+  { href: '/ai/chat', label: 'AI Chat' },
+  { href: '/ai/roadmap', label: 'Roadmap' },
   { href: '/items/add', label: 'Add Item' },
   { href: '/items/manage', label: 'Manage Items' },
 ];

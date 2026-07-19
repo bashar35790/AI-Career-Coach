@@ -3,6 +3,7 @@
 > Accelerate your career with AI-powered resume analysis, interview practice, cover letter generation, and personalized career roadmaps.
 
 **Live Site:** [https://ai-career-coach-bashar.vercel.app](https://ai-career-coach-bashar.vercel.app)
+**API:** [https://ai-career-coach-xhcp.onrender.com/api](https://ai-career-coach-xhcp.onrender.com/api)
 
 ---
 

@@ -112,7 +112,7 @@ export default function HomePage() {
     <div className="flex flex-col">
 
       {/* ──────────────── Hero ──────────────── */}
-      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-zinc-950 via-black to-zinc-950 px-4 pt-24">
+      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-zinc-950 via-black to-zinc-950 px-4">
         <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
         <div className="absolute bottom-20 right-10 w-96 h-96 bg-secondary/10 rounded-full blur-3xl" />
 

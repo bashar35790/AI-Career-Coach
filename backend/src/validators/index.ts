@@ -15,7 +15,7 @@ export const googleAuthSchema = z.object({
   email: z.string().email('Invalid email address'),
   name: z.string().min(1, 'Name is required'),
   googleId: z.string().min(1, 'Google ID is required'),
-  avatar: z.string().optional(),
+  avatar: z.string().nullable().optional(),
 });
 
 export const createItemSchema = z.object({
@@ -28,8 +28,8 @@ export const createItemSchema = z.object({
 });
 
 export const updateProfileSchema = z.object({
-  name: z.string().min(2).max(50).optional(),
-  avatar: z.string().optional(),
+  name: z.string().min(2).max(50).nullable().optional(),
+  avatar: z.string().nullable().optional(),
 });
 
 export const addSkillSchema = z.object({
@@ -45,30 +45,30 @@ export const uploadResumeSchema = z.object({
 export const coverLetterSchema = z.object({
   jobTitle: z.string().min(1, 'Job title is required'),
   company: z.string().min(1, 'Company is required'),
-  skills: z.string().optional(),
-  length: z.enum(['short', 'medium', 'long']).optional(),
+  skills: z.string().nullable().optional(),
+  length: z.enum(['short', 'medium', 'long']).nullable().optional(),
 });
 
 export const interviewQuestionsSchema = z.object({
   role: z.string().min(1, 'Role is required'),
-  experience: z.string().optional(),
-  count: z.number().min(1).max(20).optional(),
+  experience: z.string().nullable().optional(),
+  count: z.number().min(1).max(20).nullable().optional(),
 });
 
 export const improveResumeSchema = z.object({
   content: z.string().min(10, 'Resume content must be at least 10 characters'),
-  targetRole: z.string().optional(),
+  targetRole: z.string().nullable().optional(),
 });
 
 export const roadmapSchema = z.object({
   currentSkills: z.string().min(1, 'Current skills are required'),
   targetRole: z.string().min(1, 'Target role is required'),
-  timeline: z.string().optional(),
+  timeline: z.string().nullable().optional(),
 });
 
 export const chatSchema = z.object({
   message: z.string().min(1, 'Message is required'),
-  conversationId: z.string().optional(),
+  conversationId: z.string().nullable().optional(),
 });
 
 export const analyzeResumeSchema = z.object({

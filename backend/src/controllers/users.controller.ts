@@ -31,9 +31,6 @@ export async function updateProfile(req: AuthRequest, res: Response) {
 export async function addSkill(req: AuthRequest, res: Response) {
   try {
     const { name, level, category } = req.body;
-    if (!name || !level || !category) {
-      return sendError(res, 'Name, level, and category are required');
-    }
     const skill = await Skill.create({ userId: req.userId, name, level, category });
     return sendSuccess(res, skill, 201);
   } catch (error) {
@@ -44,7 +41,6 @@ export async function addSkill(req: AuthRequest, res: Response) {
 export async function uploadResume(req: AuthRequest, res: Response) {
   try {
     const { content } = req.body;
-    if (!content) return sendError(res, 'Content is required');
     const resume = await Resume.create({ userId: req.userId, content });
     return sendSuccess(res, resume, 201);
   } catch (error) {

@@ -7,7 +7,6 @@ import type { AuthRequest } from '../middleware/auth';
 export async function coverLetter(req: AuthRequest, res: Response) {
   try {
     const { jobTitle, company, skills, length = 'medium' } = req.body;
-    if (!jobTitle || !company) return sendError(res, 'Job title and company are required');
 
     const content = await generateCoverLetter({ jobTitle, company, skills: skills || '', length });
 
@@ -24,11 +23,15 @@ export async function coverLetter(req: AuthRequest, res: Response) {
 export async function interviewQuestions(req: AuthRequest, res: Response) {
   try {
     const { role, experience, count = 10 } = req.body;
-    if (!role) return sendError(res, 'Role is required');
 
     const content = await generateInterviewQuestions({ role, experience: experience || 'mid-level', count: Math.min(count, 20) });
-    const parsed = JSON.parse(content);
-    const questionsArr = Array.isArray(parsed) ? parsed : (parsed.questions || []);
+    let questionsArr: { question: string; answer: string }[] = [];
+    try {
+      const parsed = JSON.parse(content);
+      questionsArr = Array.isArray(parsed) ? parsed : (parsed.questions || []);
+    } catch {
+      questionsArr = [{ question: 'Failed to parse questions', answer: content }];
+    }
     return sendSuccess(res, { questions: questionsArr });
   } catch (error: any) {
     return sendError(res, error?.error?.message || error?.message || 'Failed to generate questions', 500);
@@ -38,7 +41,6 @@ export async function interviewQuestions(req: AuthRequest, res: Response) {
 export async function resumeImprove(req: AuthRequest, res: Response) {
   try {
     const { content, targetRole } = req.body;
-    if (!content) return sendError(res, 'Resume content is required');
 
     const improved = await improveResume({ content, targetRole });
     return sendSuccess(res, { improved });
@@ -50,11 +52,16 @@ export async function resumeImprove(req: AuthRequest, res: Response) {
 export async function roadmap(req: AuthRequest, res: Response) {
   try {
     const { currentSkills, targetRole, timeline = '6 months' } = req.body;
-    if (!currentSkills || !targetRole) return sendError(res, 'Current skills and target role are required');
 
     const content = await generateRoadmap({ currentSkills, targetRole, timeline });
-    const parsed = JSON.parse(content);
-    return sendSuccess(res, { roadmap: parsed.roadmap || parsed });
+    let roadmapData: Record<string, unknown> = { phases: [] };
+    try {
+      const parsed = JSON.parse(content);
+      roadmapData = parsed.roadmap || parsed;
+    } catch {
+      roadmapData = { phases: [{ title: 'Error', duration: 'N/A', tasks: ['Failed to parse roadmap'] }] };
+    }
+    return sendSuccess(res, { roadmap: roadmapData });
   } catch (error: any) {
     const message = error?.error?.message || error?.message || 'Failed to generate roadmap';
     return sendError(res, message, 500);
@@ -64,7 +71,6 @@ export async function roadmap(req: AuthRequest, res: Response) {
 export async function chat(req: AuthRequest, res: Response) {
   try {
     const { message, conversationId } = req.body;
-    if (!message) return sendError(res, 'Message is required');
 
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Cache-Control', 'no-cache');
@@ -114,10 +120,15 @@ export async function chat(req: AuthRequest, res: Response) {
 export async function resumeAnalyze(req: AuthRequest, res: Response) {
   try {
     const { content } = req.body;
-    if (!content) return sendError(res, 'Resume content is required');
 
     const analysis = await analyzeResume(content);
-    return sendSuccess(res, { analysis: JSON.parse(analysis) });
+    let analysisData: Record<string, unknown> = {};
+    try {
+      analysisData = JSON.parse(analysis);
+    } catch {
+      analysisData = { error: 'Failed to parse analysis', raw: analysis };
+    }
+    return sendSuccess(res, { analysis: analysisData });
   } catch (error: any) {
     return sendError(res, error?.error?.message || error?.message || 'Failed to analyze resume', 500);
   }
@@ -125,10 +136,23 @@ export async function resumeAnalyze(req: AuthRequest, res: Response) {
 
 export async function getConversations(req: AuthRequest, res: Response) {
   try {
-    const conversations = await Conversation.find({ userId: req.userId })
-      .select('title createdAt')
-      .sort({ updatedAt: -1 });
-    return sendSuccess(res, conversations);
+    const { page = '1', limit = '20' } = req.query;
+    const pageNum = Math.max(1, parseInt(page as string, 10));
+    const limitNum = Math.min(50, Math.max(1, parseInt(limit as string, 10)));
+    const skip = (pageNum - 1) * limitNum;
+
+    const [conversations, total] = await Promise.all([
+      Conversation.find({ userId: req.userId })
+        .select('title createdAt')
+        .sort({ updatedAt: -1 })
+        .skip(skip)
+        .limit(limitNum),
+      Conversation.countDocuments({ userId: req.userId }),
+    ]);
+    return sendSuccess(res, {
+      conversations,
+      pagination: { page: pageNum, limit: limitNum, total, pages: Math.ceil(total / limitNum) },
+    });
   } catch (error) {
     return sendError(res, 'Failed to fetch conversations', 500);
   }

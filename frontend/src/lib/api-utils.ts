@@ -2,72 +2,92 @@ import api from './api';
 import type { ApiResponse, AuthResponse, AuthUser, Item, Pagination, UserProfile, Skill } from '@/types';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
-export async function loginUser(email: string, password: string) {
-  const res = await api.post<ApiResponse<AuthResponse>>('/auth/login', { email, password });
-  return res.data.data!;
-}
-
-export async function registerUser(name: string, email: string, password: string) {
-  const res = await api.post<ApiResponse<AuthResponse>>('/auth/register', { name, email, password });
-  return res.data.data!;
-}
-
-export async function demoLogin() {
-  const res = await api.post<ApiResponse<AuthResponse>>('/auth/demo');
-  return res.data.data!;
-}
-
-export async function googleAuth(credential: { email: string; name: string; googleId: string; avatar?: string }) {
-  const res = await api.post<ApiResponse<AuthResponse>>('/auth/google', credential);
-  return res.data.data!;
-}
-
-export async function getMe() {
-  const res = await api.get<ApiResponse<AuthUser>>('/auth/me');
-  return res.data.data!;
-}
-
-export async function fetchItems(params?: { category?: string; sort?: string; page?: number; limit?: number }) {
-  let res;
-  try {
-    res = await api.get('/items', { params });
-  } catch {
-    throw new Error(`Network Error - cannot reach backend at ${api.defaults.baseURL}/items`);
-  }
+async function extractData<T>(res: { data: ApiResponse<T> }): Promise<T> {
   const body = res.data;
   if (!body?.success || !body?.data) {
     throw new Error(body?.error || 'Unexpected response format from server');
   }
-  return body.data as { items: Item[]; pagination: Pagination };
+  return body.data;
+}
+
+export async function loginUser(email: string, password: string) {
+  return extractData<AuthResponse>(await api.post('/auth/login', { email, password }));
+}
+
+export async function registerUser(name: string, email: string, password: string) {
+  return extractData<AuthResponse>(await api.post('/auth/register', { name, email, password }));
+}
+
+export async function demoLogin() {
+  return extractData<AuthResponse>(await api.post('/auth/demo'));
+}
+
+export async function googleAuth(credential: { email: string; name: string; googleId: string; avatar?: string }) {
+  return extractData<AuthResponse>(await api.post('/auth/google', credential));
+}
+
+export async function getMe() {
+  return extractData<AuthUser>(await api.get('/auth/me'));
+}
+
+export async function fetchItems(params?: { category?: string; sort?: string; page?: number; limit?: number }) {
+  return extractData<{ items: Item[]; pagination: Pagination }>(await api.get('/items', { params }));
 }
 
 export async function fetchItem(id: string) {
-  const res = await api.get(`/items/${id}`);
-  if (!res.data?.success || !res.data?.data) {
-    throw new Error(res.data?.error || 'Failed to fetch item');
-  }
-  return res.data.data as Item;
+  return extractData<Item>(await api.get(`/items/${id}`));
 }
 
 export async function createItem(data: { title: string; shortDesc: string; fullDesc: string; price: number; category: string; image?: string }) {
-  const res = await api.post<ApiResponse<Item>>('/items', data);
-  return res.data.data!;
+  return extractData<Item>(await api.post('/items', data));
 }
 
 export async function deleteItem(id: string) {
-  const res = await api.delete<ApiResponse<{ message: string }>>(`/items/${id}`);
-  return res.data.data!;
+  return extractData<{ message: string }>(await api.delete(`/items/${id}`));
 }
 
 export async function getProfile() {
-  const res = await api.get<ApiResponse<UserProfile>>('/users/profile');
-  return res.data.data!;
+  return extractData<UserProfile>(await api.get('/users/profile'));
 }
 
 export async function updateProfile(data: Partial<{ name: string; avatar: string }>) {
-  const res = await api.put<ApiResponse<AuthUser>>('/users/profile', data);
-  return res.data.data!;
+  return extractData<AuthUser>(await api.put('/users/profile', data));
 }
+
+export async function addSkillApi(data: { name: string; level: string; category: string }) {
+  return extractData<Skill>(await api.post('/users/skills', data));
+}
+
+export async function uploadResumeApi(content: string) {
+  return extractData<{ content: string }>(await api.post('/users/resume', { content }));
+}
+
+export async function generateCoverLetter(data: { jobTitle: string; company: string; skills?: string; length?: string }) {
+  return extractData<{ content: string }>(await api.post('/ai/cover-letter', data));
+}
+
+export async function generateInterviewQuestions(data: { role: string; experience?: string; count?: number }) {
+  return extractData<{ questions: { question: string; answer: string }[] }>(await api.post('/ai/interview-questions', data));
+}
+
+export async function improveResume(data: { content: string; targetRole?: string }) {
+  return extractData<{ improved: string }>(await api.post('/ai/improve-resume', data));
+}
+
+export async function generateRoadmap(data: { currentSkills: string; targetRole: string; timeline?: string }) {
+  return extractData<{ roadmap: { phases: { title: string; duration: string; tasks: string[] }[] } }>(await api.post('/ai/roadmap', data));
+}
+
+export async function fetchConversations() {
+  const data = await extractData<{ conversations: { _id: string; title: string; createdAt: string }[]; pagination: Pagination } | { _id: string; title: string; createdAt: string }[]>(await api.get('/ai/conversations'));
+  return Array.isArray(data) ? data : data.conversations;
+}
+
+export async function fetchConversation(id: string) {
+  return extractData<{ _id: string; title: string; messages: { role: string; content: string; timestamp: string }[] }>(await api.get(`/ai/conversations/${id}`));
+}
+
+// ── React Query Hooks ──
 
 export function useItems(params?: { category?: string; sort?: string; page?: number; limit?: number }) {
   return useQuery({
@@ -117,11 +137,6 @@ export function useUpdateProfile() {
   });
 }
 
-export async function addSkillApi(data: { name: string; level: string; category: string }) {
-  const res = await api.post<ApiResponse<Skill>>('/users/skills', data);
-  return res.data.data!;
-}
-
 export function useAddSkill() {
   const qc = useQueryClient();
   return useMutation({
@@ -130,47 +145,10 @@ export function useAddSkill() {
   });
 }
 
-export async function uploadResumeApi(content: string) {
-  const res = await api.post<ApiResponse<{ content: string }>>('/users/resume', { content });
-  return res.data.data!;
-}
-
 export function useUploadResume() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: uploadResumeApi,
     onSuccess: () => qc.invalidateQueries({ queryKey: ['profile'] }),
   });
-}
-
-// ── AI Feature API functions ──
-
-export async function generateCoverLetter(data: { jobTitle: string; company: string; skills?: string; length?: string }) {
-  const res = await api.post<ApiResponse<{ content: string }>>('/ai/cover-letter', data);
-  return res.data.data!;
-}
-
-export async function generateInterviewQuestions(data: { role: string; experience?: string; count?: number }) {
-  const res = await api.post<ApiResponse<{ questions: { question: string; answer: string }[] }>>('/ai/interview-questions', data);
-  return res.data.data!;
-}
-
-export async function improveResume(data: { content: string; targetRole?: string }) {
-  const res = await api.post<ApiResponse<{ improved: string }>>('/ai/improve-resume', data);
-  return res.data.data!;
-}
-
-export async function generateRoadmap(data: { currentSkills: string; targetRole: string; timeline?: string }) {
-  const res = await api.post<ApiResponse<{ roadmap: { phases: { title: string; duration: string; tasks: string[] }[] } }>>('/ai/roadmap', data);
-  return res.data.data!;
-}
-
-export async function fetchConversations() {
-  const res = await api.get<ApiResponse<{ _id: string; title: string; createdAt: string }[]>>('/ai/conversations');
-  return res.data.data!;
-}
-
-export async function fetchConversation(id: string) {
-  const res = await api.get<ApiResponse<{ _id: string; title: string; messages: { role: string; content: string; timestamp: string }[] }>>(`/ai/conversations/${id}`);
-  return res.data.data!;
 }

@@ -1,9 +1,9 @@
-import { Response } from 'express';
-import { Item } from '../models/index';
+import { Request, Response } from 'express';
+import { Item, User } from '../models/index';
 import { sendSuccess, sendError } from '../utils/response';
 import type { AuthRequest } from '../middleware/auth';
 
-export async function getItems(req: AuthRequest, res: Response) {
+export async function getItems(req: Request, res: Response) {
   try {
     const { category, minPrice, maxPrice, sort, page = '1', limit = '12' } = req.query;
 
@@ -38,7 +38,7 @@ export async function getItems(req: AuthRequest, res: Response) {
   }
 }
 
-export async function getItem(req: AuthRequest, res: Response) {
+export async function getItem(req: Request, res: Response) {
   try {
     const item = await Item.findById(req.params.id).populate('createdBy', 'name email');
     if (!item) return sendError(res, 'Item not found', 404);
@@ -51,10 +51,6 @@ export async function getItem(req: AuthRequest, res: Response) {
 export async function createItem(req: AuthRequest, res: Response) {
   try {
     const { title, shortDesc, fullDesc, price, category, image } = req.body;
-
-    if (!title || !shortDesc || !fullDesc || price === undefined || !category) {
-      return sendError(res, 'Title, shortDesc, fullDesc, price, and category are required');
-    }
 
     const item = await Item.create({
       title,
@@ -77,7 +73,11 @@ export async function deleteItem(req: AuthRequest, res: Response) {
     const item = await Item.findById(req.params.id);
     if (!item) return sendError(res, 'Item not found', 404);
 
-    if (item.createdBy.toString() !== req.userId) {
+    const user = await User.findById(req.userId);
+    const isOwner = item.createdBy.toString() === req.userId;
+    const isAdmin = user?.role === 'admin';
+
+    if (!isOwner && !isAdmin) {
       return sendError(res, 'Not authorized to delete this item', 403);
     }
 

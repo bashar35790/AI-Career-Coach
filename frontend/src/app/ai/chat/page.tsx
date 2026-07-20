@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import AuthGuard from '@/components/AuthGuard';
 import { fetchConversations, fetchConversation } from '@/lib/api-utils';
-import api from '@/lib/api';
+import { apiClient } from '@/lib/api';
 import { MessageSquare, Plus, Send, Menu, X } from 'lucide-react';
 
 interface Message {
@@ -65,26 +65,16 @@ export default function ChatPage() {
     setStreaming(true);
 
     try {
-      const token = localStorage.getItem('token');
-      const res = await fetch(`${api.defaults.baseURL}/ai/chat`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ message: userMessage, conversationId }),
+      const res = await apiClient.post('/ai/chat', { message: userMessage, conversationId }, {
+        responseType: 'stream',
       });
 
-      if (!res.ok) {
-        let errMsg = 'Chat failed';
-        try {
-          const errData = await res.json();
-          if (errData.error) errMsg = errData.error;
-        } catch { }
-        throw new Error(errMsg);
+      if (!res.status.toString().startsWith('2')) {
+        const errData = res.data as { error?: string };
+        throw new Error(errData?.error || 'Chat failed');
       }
 
-      const reader = res.body?.getReader();
+      const reader = (res.data as ReadableStream).getReader();
       if (!reader) throw new Error('No reader');
 
       let fullResponse = '';

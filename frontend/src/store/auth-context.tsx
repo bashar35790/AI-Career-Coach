@@ -63,6 +63,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  useEffect(() => {
+    const handler = () => logout();
+    if (typeof window !== 'undefined') {
+      window.addEventListener('auth:unauthorized', handler);
+    }
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('auth:unauthorized', handler);
+      }
+    };
+  }, [logout]);
+
   const refreshUser = useCallback(async () => {
     try {
       const res = await api.get('/auth/me');

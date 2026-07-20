@@ -14,10 +14,6 @@ export async function register(req: Request, res: Response) {
   try {
     const { name, email, password } = req.body;
 
-    if (!name || !email || !password) {
-      return sendError(res, 'Name, email, and password are required');
-    }
-
     const existing = await User.findOne({ email });
     if (existing) {
       return sendError(res, 'Email already registered', 409);
@@ -36,10 +32,6 @@ export async function register(req: Request, res: Response) {
 export async function login(req: Request, res: Response) {
   try {
     const { email, password } = req.body;
-
-    if (!email || !password) {
-      return sendError(res, 'Email and password are required');
-    }
 
     const user = await User.findOne({ email }).select('+password');
     if (!user || !user.password) {
@@ -61,10 +53,6 @@ export async function login(req: Request, res: Response) {
 export async function googleAuth(req: Request, res: Response) {
   try {
     const { email, name, googleId, avatar } = req.body;
-
-    if (!email || !googleId) {
-      return sendError(res, 'Email and googleId are required');
-    }
 
     let user = await User.findOne({ $or: [{ googleId }, { email }] });
 

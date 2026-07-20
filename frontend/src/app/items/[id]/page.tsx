@@ -4,17 +4,24 @@ import { use } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useItem, useItems } from '@/lib/api-utils';
+import { Package, ArrowLeft, RefreshCw } from 'lucide-react';
 
 export default function DetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  const { data: item, isLoading, error } = useItem(id);
+  const { data: item, isLoading, error, refetch } = useItem(id);
   const { data: relatedData } = useItems(
-    item ? { category: item.category, page: 1 } : undefined
+    item ? { category: item.category, page: 1 } : undefined,
   );
+
+  const isNotFound =
+    error &&
+    ((error as { response?: { status?: number } })?.response?.status === 404 ||
+      (error as Error)?.message?.toLowerCase().includes('not found'));
 
   if (isLoading) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-8 animate-pulse">
+        <div className="h-8 bg-zinc-800 rounded w-32 mb-8" />
         <div className="h-64 bg-zinc-800 rounded-2xl mb-8" />
         <div className="h-8 bg-zinc-800 rounded w-1/2 mb-4" />
         <div className="h-4 bg-zinc-800 rounded w-3/4 mb-2" />
@@ -27,11 +34,50 @@ export default function DetailPage({ params }: { params: Promise<{ id: string }>
   if (error || !item) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-20 text-center">
-        <h2 className="text-2xl font-bold mb-2">Item not found</h2>
-        <p className="text-text-muted mb-6">The item you&apos;re looking for doesn&apos;t exist or has been removed.</p>
-        <Link href="/explore" className="text-primary hover:underline font-medium">
-          Back to Explore
-        </Link>
+        <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-6">
+          <Package className="w-10 h-10 text-primary" />
+        </div>
+
+        {isNotFound ? (
+          <>
+            <h1 className="text-4xl font-bold mb-2">Item not found</h1>
+            <p className="text-text-muted mb-2">
+              This item doesn&apos;t exist or has been removed.
+            </p>
+            <p className="text-xs text-zinc-600 mb-8">
+              The ID <code className="text-primary/60">{id}</code> doesn&apos;t match any item in our database.
+            </p>
+          </>
+        ) : (
+          <>
+            <h1 className="text-4xl font-bold mb-2">Something went wrong</h1>
+            <p className="text-text-muted mb-2">
+              We couldn&apos;t load this item. Please try again.
+            </p>
+            <p className="text-xs text-red-400/60 mb-8">
+              {(error as Error)?.message || 'An unexpected error occurred'}
+            </p>
+          </>
+        )}
+
+        <div className="flex items-center justify-center gap-3">
+          <Link
+            href="/explore"
+            className="inline-flex items-center gap-2 px-5 py-2.5 border border-border text-text font-medium rounded-xl hover:bg-zinc-800 transition-colors text-sm"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Browse Items
+          </Link>
+          {!isNotFound && (
+            <button
+              onClick={() => refetch()}
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white font-medium rounded-xl hover:bg-primary-dark transition-colors text-sm"
+            >
+              <RefreshCw className="w-4 h-4" />
+              Try Again
+            </button>
+          )}
+        </div>
       </div>
     );
   }
@@ -40,8 +86,12 @@ export default function DetailPage({ params }: { params: Promise<{ id: string }>
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
-      <Link href="/explore" className="text-sm text-text-muted hover:text-primary transition-colors mb-6 inline-block">
-        &larr; Back to Explore
+      <Link
+        href="/explore"
+        className="inline-flex items-center gap-1.5 text-sm text-text-muted hover:text-primary transition-colors mb-6"
+      >
+        <ArrowLeft className="w-4 h-4" />
+        Back to Explore
       </Link>
 
       <div className="bg-zinc-900 rounded-2xl border border-border overflow-hidden">

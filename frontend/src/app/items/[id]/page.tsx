@@ -102,7 +102,9 @@ export default function DetailPage({ params }: { params: Promise<{ id: string }>
               src={item.image}
               alt={item.title}
               fill
+              sizes="(max-width: 768px) 100vw, 50vw"
               className="object-cover"
+              unoptimized
               onError={() => setImageError(true)}
             />
           ) : (

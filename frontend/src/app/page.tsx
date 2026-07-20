@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowRight, Sparkles, FileText, MessageSquare,
   Route, Target, Brain, ChevronDown, Star,
-  Users, BookOpen, Award, Rocket, Zap,
+  Users, BookOpen, Award, Rocket, Zap, ChevronLeft, ChevronRight,
 } from 'lucide-react';
 
 const fadeUp = {
@@ -70,7 +70,12 @@ const testimonials = [
   { name: 'Marcus Johnson', role: 'Product Manager', text: 'The career roadmap feature helped me map out exactly what skills I needed to transition into product management.', rating: 5 },
   { name: 'Priya Patel', role: 'Data Scientist', text: 'My resume went from getting zero callbacks to landing multiple interviews after the AI improvement suggestions.', rating: 5 },
   { name: 'Alex Rivera', role: 'UX Designer', text: 'The cover letter generator saved me hours of work and the results were better than anything I could write myself.', rating: 5 },
+  { name: 'Jordan Kim', role: 'DevOps Engineer', text: 'The skill assessment feature identified exactly what I was missing. Three months later I got promoted.', rating: 5 },
+  { name: 'Taylor Reed', role: 'Marketing Director', text: 'Career roadmaps gave me a clear path to transition from marketing to product growth. Invaluable tool.', rating: 5 },
 ];
+
+const PER_PAGE = 3;
+const TOTAL_PAGES = Math.ceil(testimonials.length / PER_PAGE);
 
 const faqs = [
   { q: 'Is the platform free?', a: 'Yes! We offer a generous free tier with access to all core features. Premium plans with advanced analytics are coming soon.' },
@@ -81,10 +86,12 @@ const faqs = [
 ];
 
 export default function HomePage() {
-  const [activeTestimonial, setActiveTestimonial] = useState(0);
+  const [reviewPage, setReviewPage] = useState(0);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [statsVisible, setStatsVisible] = useState(false);
   const statsRef = useRef<HTMLDivElement>(null);
+
+  const visibleReviews = testimonials.slice(reviewPage * PER_PAGE, reviewPage * PER_PAGE + PER_PAGE);
 
   useEffect(() => {
     const el = statsRef.current;
@@ -95,13 +102,6 @@ export default function HomePage() {
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setActiveTestimonial((p) => (p + 1) % testimonials.length);
-    }, 5000);
-    return () => clearInterval(timer);
   }, []);
 
   const usersCount = useCountUp(10000, 2000, statsVisible);
@@ -314,7 +314,7 @@ export default function HomePage() {
 
       {/* ──────────────── Testimonials ──────────────── */}
       <section className="py-24 px-4 bg-surface-muted">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -330,45 +330,67 @@ export default function HomePage() {
           </motion.div>
 
           <div className="relative">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeTestimonial}
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -50 }}
-                transition={{ duration: 0.4 }}
-                className="bg-zinc-900 rounded-2xl p-8 md:p-10 border border-border shadow-lg"
-              >
-                <div className="flex gap-1 mb-4">
-                  {[...Array(testimonials[activeTestimonial].rating)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 fill-accent text-accent" />
-                  ))}
-                </div>
-                <p className="text-lg text-text leading-relaxed">
-                  &ldquo;{testimonials[activeTestimonial].text}&rdquo;
-                </p>
-                <div className="mt-6 flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-secondary" />
-                  <div>
-                    <p className="font-semibold">{testimonials[activeTestimonial].name}</p>
-                    <p className="text-text-muted text-sm">{testimonials[activeTestimonial].role}</p>
+            <motion.div
+              key={reviewPage}
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.35 }}
+              className="grid grid-cols-1 md:grid-cols-3 gap-6"
+            >
+              {visibleReviews.map((t, i) => (
+                <div
+                  key={i}
+                  className="bg-zinc-900 rounded-2xl p-6 border border-border shadow-lg flex flex-col"
+                >
+                  <div className="flex gap-1 mb-4">
+                    {[...Array(t.rating)].map((_, j) => (
+                      <Star key={j} className="w-4 h-4 fill-accent text-accent" />
+                    ))}
+                  </div>
+                  <p className="text-text leading-relaxed flex-1">
+                    &ldquo;{t.text}&rdquo;
+                  </p>
+                  <div className="mt-6 flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex-shrink-0" />
+                    <div>
+                      <p className="font-semibold text-sm">{t.name}</p>
+                      <p className="text-text-muted text-xs">{t.role}</p>
+                    </div>
                   </div>
                 </div>
-              </motion.div>
-            </AnimatePresence>
-
-            <div className="flex justify-center gap-2 mt-8">
-              {testimonials.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setActiveTestimonial(i)}
-                  className={`w-3 h-3 rounded-full transition-all ${
-                    i === activeTestimonial
-                      ? 'bg-primary w-8'
-                      : 'bg-border hover:bg-primary/50'
-                  }`}
-                />
               ))}
+            </motion.div>
+
+            <div className="flex items-center justify-center gap-4 mt-8">
+              <button
+                onClick={() => setReviewPage((p) => Math.max(0, p - 1))}
+                disabled={reviewPage === 0}
+                className="p-2 rounded-full border border-border hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+
+              <div className="flex gap-2">
+                {Array.from({ length: TOTAL_PAGES }).map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setReviewPage(i)}
+                    className={`w-3 h-3 rounded-full transition-all ${
+                      i === reviewPage
+                        ? 'bg-primary w-8'
+                        : 'bg-border hover:bg-primary/50'
+                    }`}
+                  />
+                ))}
+              </div>
+
+              <button
+                onClick={() => setReviewPage((p) => Math.min(TOTAL_PAGES - 1, p + 1))}
+                disabled={reviewPage === TOTAL_PAGES - 1}
+                className="p-2 rounded-full border border-border hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
             </div>
           </div>
         </div>

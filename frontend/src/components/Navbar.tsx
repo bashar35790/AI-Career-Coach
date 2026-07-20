@@ -171,7 +171,7 @@ export default function Navbar() {
 
         {/* ─── Mobile nav ─── */}
         {menuOpen && (
-          <div className="sm:hidden pb-4 space-y-1">
+          <div className="sm:hidden space-y-1 bg-zinc-900/95 backdrop-blur-lg rounded-2xl border border-border p-3 mt-2">
             {links.map((link) => {
               const isActive = link.href === '/' ? pathname === '/' : pathname.startsWith(link.href);
               return (

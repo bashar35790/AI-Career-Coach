@@ -38,11 +38,10 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? 'bg-black/80 backdrop-blur-lg border-b border-border shadow-sm'
-          : 'bg-transparent'
-      }`}
+      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${scrolled
+        ? 'bg-black/80 backdrop-blur-lg border-b border-border shadow-sm'
+        : 'bg-transparent'
+        }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
@@ -74,11 +73,10 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`text-sm font-medium transition-colors ${
-                    isActive
-                      ? 'text-primary font-semibold'
-                      : 'text-text-muted hover:text-primary'
-                  }`}
+                  className={`text-sm font-medium transition-colors ${isActive
+                    ? 'text-primary font-semibold'
+                    : 'text-text-muted hover:text-primary'
+                    }`}
                 >
                   {link.label}
                 </Link>
@@ -110,11 +108,10 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`block px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                    isActive
-                      ? 'text-primary font-semibold bg-primary/5'
-                      : 'text-text-muted hover:text-primary hover:bg-surface-muted'
-                  }`}
+                  className={`block px-3 py-2 text-sm font-medium rounded-md transition-colors ${isActive
+                    ? 'text-primary font-semibold bg-primary/5'
+                    : 'text-text-muted hover:text-primary hover:bg-surface-muted'
+                    }`}
                   onClick={() => setMenuOpen(false)}
                 >
                   {link.label}
@@ -124,14 +121,14 @@ export default function Navbar() {
             {user ? (
               <button
                 onClick={() => { logout(); setMenuOpen(false); }}
-                className="block w-full text-left px-3 py-2 text-sm font-medium text-red-500 hover:bg-surface-muted rounded-md transition-colors"
+                className="block w-full text-left px-3 py-2 text-sm font-medium text-red-500 hover:bg-surface-muted rounded-md transition-colors cursor-pointer"
               >
                 Logout
               </button>
             ) : (
               <Link
                 href="/register"
-                className="block px-3 py-2 text-sm font-semibold text-primary hover:bg-surface-muted rounded-md transition-colors"
+                className="block px-3 py-2 text-sm font-semibold text-primary hover:bg-surface-muted rounded-md transition-colors cursor-pointer"
                 onClick={() => setMenuOpen(false)}
               >
                 Get Started

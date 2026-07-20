@@ -30,7 +30,7 @@ export async function getMe() {
   return extractData<AuthUser>(await api.get('/auth/me'));
 }
 
-export async function fetchItems(params?: { category?: string; sort?: string; page?: number; limit?: number }) {
+export async function fetchItems(params?: { search?: string; category?: string; sort?: string; page?: number; limit?: number }) {
   return extractData<{ items: Item[]; pagination: Pagination }>(await api.get('/items', { params }));
 }
 
@@ -89,9 +89,9 @@ export async function fetchConversation(id: string) {
 
 // ── React Query Hooks ──
 
-export function useItems(params?: { category?: string; sort?: string; page?: number; limit?: number }) {
+export function useItems(params?: { search?: string; category?: string; sort?: string; page?: number; limit?: number }) {
   return useQuery({
-    queryKey: ['items', params?.page ?? 1, params?.limit ?? 12, params?.category ?? '', params?.sort ?? ''],
+    queryKey: ['items', params?.page ?? 1, params?.limit ?? 12, params?.search ?? '', params?.category ?? '', params?.sort ?? ''],
     queryFn: () => fetchItems(params),
     staleTime: 30000,
     retry: 1,

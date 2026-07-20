@@ -1,54 +1,79 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Search } from 'lucide-react';
 import { useItems } from '@/lib/api-utils';
 import type { Item } from '@/types';
 
 const categories = ['All', 'Web Development', 'Data Science', 'AI & ML', 'DevOps', 'Design', 'Business'];
 
 export default function ExplorePage() {
+  const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [category, setCategory] = useState('');
   const [sort, setSort] = useState('newest');
   const [page, setPage] = useState(1);
   const [erroredImages, setErroredImages] = useState<Set<string>>(new Set());
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>(null);
 
   const handleImageError = useCallback((src: string) => {
     setErroredImages(prev => new Set(prev).add(src));
   }, []);
 
+  useEffect(() => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      setDebouncedSearch(search);
+      setPage(1);
+    }, 300);
+    return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
+  }, [search]);
+
   const queryCategory = category && category !== 'All' ? category : undefined;
   const querySort = sort === 'popular' ? 'rating' : undefined;
+  const querySearch = debouncedSearch.trim() || undefined;
 
-  const { data, isLoading, error } = useItems({ category: queryCategory, sort: querySort, page, limit: 8 });
+  const { data, isLoading, error } = useItems({ search: querySearch, category: queryCategory, sort: querySort, page, limit: 8 });
 
   const items: Item[] = data?.items ?? [];
   const pagination = data?.pagination;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-        <h1 className="text-3xl font-bold">Explore</h1>
-        <div className="flex gap-3">
-          <select
-            value={category}
-            onChange={(e) => { setCategory(e.target.value); setPage(1); }}
-            className="px-3 py-2 border border-border rounded-lg text-sm bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-primary/50"
-          >
-            {categories.map((c) => (
-              <option key={c} value={c === 'All' ? '' : c}>{c}</option>
-            ))}
-          </select>
-          <select
-            value={sort}
-            onChange={(e) => setSort(e.target.value)}
-            className="px-3 py-2 border border-border rounded-lg text-sm bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-primary/50"
-          >
-            <option value="newest">Newest</option>
-            <option value="popular">Most Popular</option>
-          </select>
+      <div className="flex flex-col gap-4 mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <h1 className="text-3xl font-bold">Explore</h1>
+          <div className="flex gap-3">
+            <select
+              value={category}
+              onChange={(e) => { setCategory(e.target.value); setPage(1); }}
+              className="px-3 py-2 border border-border rounded-lg text-sm bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-primary/50"
+            >
+              {categories.map((c) => (
+                <option key={c} value={c === 'All' ? '' : c}>{c}</option>
+              ))}
+            </select>
+            <select
+              value={sort}
+              onChange={(e) => setSort(e.target.value)}
+              className="px-3 py-2 border border-border rounded-lg text-sm bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-primary/50"
+            >
+              <option value="newest">Newest</option>
+              <option value="popular">Most Popular</option>
+            </select>
+          </div>
+        </div>
+        <div className="relative max-w-md">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search courses..."
+            className="w-full pl-10 pr-4 py-2.5 border border-border rounded-xl text-sm bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 placeholder:text-zinc-600 transition-all"
+          />
         </div>
       </div>
 
@@ -74,7 +99,7 @@ export default function ExplorePage() {
       ) : items.length === 0 ? (
         <div className="text-center py-20 text-text-muted">
           <p className="text-lg">No items found</p>
-          <p className="mt-2">Try adjusting your filters.</p>
+          <p className="mt-2">Try adjusting your search or filters.</p>
         </div>
       ) : (
         <>

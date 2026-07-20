@@ -5,9 +5,18 @@ import type { AuthRequest } from '../middleware/auth';
 
 export async function getItems(req: Request, res: Response) {
   try {
-    const { category, minPrice, maxPrice, sort, page = '1', limit = '12' } = req.query;
+    const { search, category, minPrice, maxPrice, sort, page = '1', limit = '12' } = req.query;
 
     const filter: Record<string, unknown> = {};
+    if (search) {
+      const regex = { $regex: search as string, $options: 'i' };
+      filter.$or = [
+        { title: regex },
+        { shortDesc: regex },
+        { fullDesc: regex },
+        { category: regex },
+      ];
+    }
     if (category) filter.category = category;
     if (minPrice || maxPrice) {
       filter.price = {};

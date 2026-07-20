@@ -27,7 +27,7 @@ export async function getMe() {
   return res.data.data!;
 }
 
-export async function fetchItems(params?: { category?: string; sort?: string; page?: number }) {
+export async function fetchItems(params?: { category?: string; sort?: string; page?: number; limit?: number }) {
   let res;
   try {
     res = await api.get('/items', { params });
@@ -69,9 +69,9 @@ export async function updateProfile(data: Partial<{ name: string; avatar: string
   return res.data.data!;
 }
 
-export function useItems(params?: { category?: string; sort?: string; page?: number }) {
+export function useItems(params?: { category?: string; sort?: string; page?: number; limit?: number }) {
   return useQuery({
-    queryKey: ['items', params?.page ?? 1, params?.category ?? '', params?.sort ?? ''],
+    queryKey: ['items', params?.page ?? 1, params?.limit ?? 12, params?.category ?? '', params?.sort ?? ''],
     queryFn: () => fetchItems(params),
     staleTime: 30000,
     retry: 1,

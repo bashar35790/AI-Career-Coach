@@ -3,6 +3,7 @@
 import { useState, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useItems } from '@/lib/api-utils';
 import type { Item } from '@/types';
 
@@ -20,9 +21,8 @@ export default function ExplorePage() {
 
   const queryCategory = category && category !== 'All' ? category : undefined;
   const querySort = sort === 'popular' ? 'rating' : undefined;
-  const queryPage = page;
 
-  const { data, isLoading, error } = useItems({ category: queryCategory, sort: querySort, page: queryPage });
+  const { data, isLoading, error } = useItems({ category: queryCategory, sort: querySort, page, limit: 8 });
 
   const items: Item[] = data?.items ?? [];
   const pagination = data?.pagination;
@@ -123,34 +123,50 @@ export default function ExplorePage() {
           </div>
 
           {pagination && pagination.pages > 1 && (
-            <div className="flex justify-center gap-2 mt-8 flex-wrap">
-              <button
-                onClick={() => setPage(Math.max(1, page - 1))}
-                disabled={page === 1}
-                className="px-4 py-2 border border-border rounded-lg text-sm disabled:opacity-50 hover:bg-surface-muted transition-colors"
-              >
-                Previous
-              </button>
-              {Array.from({ length: pagination.pages }).map((_, i) => (
+            <div className="mt-12 flex flex-col items-center gap-4">
+              <div className="flex items-center gap-1.5 bg-zinc-900/80 border border-border rounded-2xl p-1.5 shadow-lg shadow-black/20">
                 <button
-                  key={i}
-                  onClick={() => setPage(i + 1)}
-                  className={`px-4 py-2 rounded-lg text-sm transition-colors ${
-                    page === i + 1
-                      ? 'bg-primary text-white'
-                      : 'border border-border hover:bg-surface-muted'
-                  }`}
+                  onClick={() => setPage(Math.max(1, page - 1))}
+                  disabled={page === 1}
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium text-text-muted hover:text-text hover:bg-zinc-800 disabled:opacity-30 disabled:pointer-events-none transition-all"
                 >
-                  {i + 1}
+                  <ChevronLeft className="w-4 h-4" />
+                  <span className="hidden sm:inline">Prev</span>
                 </button>
-              ))}
-              <button
-                onClick={() => setPage(Math.min(pagination.pages, page + 1))}
-                disabled={page === pagination.pages}
-                className="px-4 py-2 border border-border rounded-lg text-sm disabled:opacity-50 hover:bg-surface-muted transition-colors"
-              >
-                Next
-              </button>
+
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: pagination.pages }).map((_, i) => {
+                    const n = i + 1;
+                    const isActive = page === n;
+                    return (
+                      <button
+                        key={n}
+                        onClick={() => setPage(n)}
+                        className={`relative min-w-[36px] h-9 rounded-xl text-sm font-medium transition-all ${
+                          isActive
+                            ? 'bg-gradient-to-br from-primary to-primary-dark text-white shadow-md shadow-primary/25 scale-105'
+                            : 'text-text-muted hover:text-text hover:bg-zinc-800'
+                        }`}
+                      >
+                        {n}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <button
+                  onClick={() => setPage(Math.min(pagination.pages, page + 1))}
+                  disabled={page === pagination.pages}
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium text-text-muted hover:text-text hover:bg-zinc-800 disabled:opacity-30 disabled:pointer-events-none transition-all"
+                >
+                  <span className="hidden sm:inline">Next</span>
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+
+              <p className="text-xs text-text-muted/60">
+                Page {page} of {pagination.pages} &middot; {pagination.total} items total
+              </p>
             </div>
           )}
         </>

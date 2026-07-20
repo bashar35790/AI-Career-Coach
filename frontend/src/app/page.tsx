@@ -7,6 +7,7 @@ import {
   ArrowRight, Sparkles, FileText, MessageSquare,
   Route, Target, Brain, ChevronDown, Star,
   Users, BookOpen, Award, Rocket, Zap, ChevronLeft, ChevronRight,
+  UserPlus, Upload, WandSparkles, TrendingUp,
 } from 'lucide-react';
 
 const fadeUp = {
@@ -59,10 +60,10 @@ const features = [
 ];
 
 const steps = [
-  { num: '01', title: 'Create Your Account', desc: 'Sign up free and set up your profile with your current skills and career goals.' },
-  { num: '02', title: 'Upload Your Resume', desc: 'Upload your resume for AI-powered analysis and instant improvement suggestions.' },
-  { num: '03', title: 'Explore AI Tools', desc: 'Use our suite of AI tools for interviews, cover letters, and career planning.' },
-  { num: '04', title: 'Track & Grow', desc: 'Monitor your progress with analytics dashboards and smart skill tracking.' },
+  { icon: UserPlus, title: 'Create Your Account', desc: 'Sign up free and set up your profile with your current skills and career goals.' },
+  { icon: Upload, title: 'Upload Your Resume', desc: 'Upload your resume for AI-powered analysis and instant improvement suggestions.' },
+  { icon: WandSparkles, title: 'Explore AI Tools', desc: 'Use our suite of AI tools for interviews, cover letters, and career planning.' },
+  { icon: TrendingUp, title: 'Track & Grow', desc: 'Monitor your progress with analytics dashboards and smart skill tracking.' },
 ];
 
 const testimonials = [
@@ -267,7 +268,7 @@ export default function HomePage() {
 
       {/* ──────────────── How It Works ──────────────── */}
       <section className="py-24 px-4 bg-zinc-900/50">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -275,7 +276,7 @@ export default function HomePage() {
             variants={fadeUp}
             className="text-center mb-16"
           >
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-secondary/10 text-secondary text-sm font-medium mb-4">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
               <Route className="w-4 h-4" />
               Simple Process
             </span>
@@ -285,29 +286,36 @@ export default function HomePage() {
             </p>
           </motion.div>
 
-          <div className="relative">
-            <div className="absolute left-6 top-0 bottom-0 w-px bg-border hidden sm:block" />
+          <div className="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* connecting line */}
+            <div className="absolute top-12 left-[calc(12.5%+1.5rem)] right-[calc(12.5%+1.5rem)] h-px bg-gradient-to-r from-primary/40 via-primary to-secondary/40 hidden lg:block" />
 
-            <div className="space-y-12">
-              {steps.map((s, i) => (
-                <motion.div
-                  key={i}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  variants={fadeUp}
-                  className="relative flex gap-8 items-start"
-                >
-                  <div className="relative z-10 flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-sm shadow-lg">
-                    {s.num}
+            {steps.map((s, i) => (
+              <motion.div
+                key={i}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={fadeUp}
+                className="relative group"
+              >
+                <div className="relative z-10 flex flex-col items-center text-center p-8 rounded-2xl bg-zinc-900 border border-zinc-800 hover:border-primary/30 transition-all duration-500 hover:shadow-[0_0_40px_-12px_rgba(99,102,241,0.3)]">
+                  {/* step number badge */}
+                  <div className="absolute -top-3 right-6 px-3 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold tracking-wider">
+                    STEP {i + 1}
                   </div>
-                  <div className="pt-2">
-                    <h3 className="text-xl font-semibold">{s.title}</h3>
-                    <p className="text-text-muted mt-2 leading-relaxed">{s.desc}</p>
+
+                  {/* icon */}
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 border border-primary/10 flex items-center justify-center mb-5 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-primary/20 transition-all duration-500">
+                    <s.icon className="w-7 h-7 text-primary" />
                   </div>
-                </motion.div>
-              ))}
-            </div>
+
+                  {/* content */}
+                  <h3 className="text-xl font-bold text-text mb-3">{s.title}</h3>
+                  <p className="text-sm text-text-muted leading-relaxed">{s.desc}</p>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>

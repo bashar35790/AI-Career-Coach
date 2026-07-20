@@ -1,11 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { z } from 'zod';
 import { useAuth } from '@/store/auth-context';
-import { loginUser, demoLogin } from '@/lib/api-utils';
+import { loginUser, demoLogin, googleAuth } from '@/lib/api-utils';
+import { CredentialResponse } from '@react-oauth/google';
+import { GoogleLogin } from '@react-oauth/google';
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -19,6 +21,28 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+
+  const handleGoogleSuccess = useCallback(async (credentialResponse: CredentialResponse) => {
+    if (!credentialResponse.credential) return;
+    setGoogleLoading(true);
+    setError('');
+    try {
+      const payload = JSON.parse(atob(credentialResponse.credential.split('.')[1]));
+      const data = await googleAuth({
+        email: payload.email,
+        name: payload.name,
+        googleId: payload.sub,
+        avatar: payload.picture,
+      });
+      login(data.token, data.user);
+      router.push('/dashboard');
+    } catch {
+      setError('Google sign-in failed. Please try again.');
+    } finally {
+      setGoogleLoading(false);
+    }
+  }, [login, router]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -107,6 +131,34 @@ export default function LoginPage() {
           >
             Demo Login
           </button>
+        </div>
+
+        <div className="relative my-6">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-border" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-zinc-900 px-3 text-text-muted">Or continue with</span>
+          </div>
+        </div>
+
+        <div className="flex justify-center">
+          {googleLoading ? (
+            <div className="flex items-center gap-2 px-6 py-2.5 rounded-lg border border-border">
+              <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+              <span className="text-sm text-text-muted">Connecting...</span>
+            </div>
+          ) : (
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={() => setError('Google sign-in failed')}
+              theme="filled_black"
+              size="large"
+              text="signin_with"
+              shape="rectangular"
+              width="300"
+            />
+          )}
         </div>
 
         <div className="mt-6 text-center text-sm text-text-muted">

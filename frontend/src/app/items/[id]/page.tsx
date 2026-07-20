@@ -1,6 +1,6 @@
 'use client';
 
-import { use } from 'react';
+import { use, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useItem, useItems } from '@/lib/api-utils';
@@ -8,6 +8,7 @@ import { Package, ArrowLeft, RefreshCw } from 'lucide-react';
 
 export default function DetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
+  const [imageError, setImageError] = useState(false);
   const { data: item, isLoading, error, refetch } = useItem(id);
   const { data: relatedData } = useItems(
     item ? { category: item.category, page: 1 } : undefined,
@@ -96,8 +97,14 @@ export default function DetailPage({ params }: { params: Promise<{ id: string }>
 
       <div className="bg-zinc-900 rounded-2xl border border-border overflow-hidden">
         <div className="h-64 sm:h-80 bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center relative">
-          {item.image ? (
-            <Image src={item.image} alt={item.title} fill className="object-cover" />
+          {item.image && !imageError ? (
+            <Image
+              src={item.image}
+              alt={item.title}
+              fill
+              className="object-cover"
+              onError={() => setImageError(true)}
+            />
           ) : (
             <div className="w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-3xl">
               {item.title[0]}

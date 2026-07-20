@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useItems } from '@/lib/api-utils';
@@ -12,6 +12,11 @@ export default function ExplorePage() {
   const [category, setCategory] = useState('');
   const [sort, setSort] = useState('newest');
   const [page, setPage] = useState(1);
+  const [erroredImages, setErroredImages] = useState<Set<string>>(new Set());
+
+  const handleImageError = useCallback((src: string) => {
+    setErroredImages(prev => new Set(prev).add(src));
+  }, []);
 
   const queryCategory = category && category !== 'All' ? category : undefined;
   const querySort = sort === 'popular' ? 'rating' : undefined;
@@ -81,8 +86,14 @@ export default function ExplorePage() {
                 className="rounded-2xl border border-border overflow-hidden hover:shadow-md transition-shadow bg-zinc-900 group"
               >
                 <div className="h-48 bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center relative">
-                  {item.image ? (
-                    <Image src={item.image} alt={item.title} fill className="object-cover" />
+                  {item.image && !erroredImages.has(item.image) ? (
+                    <Image
+                      src={item.image}
+                      alt={item.title}
+                      fill
+                      className="object-cover"
+                      onError={() => handleImageError(item.image!)}
+                    />
                   ) : (
                     <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-lg">
                       {item.title[0]}

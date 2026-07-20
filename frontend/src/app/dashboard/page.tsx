@@ -5,6 +5,7 @@ import AuthGuard from '@/components/AuthGuard';
 import { useProfile } from '@/lib/api-utils';
 import { useItems } from '@/lib/api-utils';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { FileText, FilePen, Briefcase, MessageSquare, Map, Zap, ArrowRight } from 'lucide-react';
 
 const chartData = [
   { month: 'Jan', activity: 4 },
@@ -16,11 +17,11 @@ const chartData = [
 ];
 
 const aiTools = [
-  { href: '/ai/resume', label: 'Resume Improver', desc: 'AI-powered resume analysis and improvement' },
-  { href: '/ai/cover-letter', label: 'Cover Letter', desc: 'Generate tailored cover letters' },
-  { href: '/ai/interview', label: 'Interview Prep', desc: 'Practice with AI-generated questions' },
-  { href: '/ai/chat', label: 'AI Chat', desc: 'Get career advice from AI assistant' },
-  { href: '/ai/roadmap', label: 'Roadmap', desc: 'Create a personalized career roadmap' },
+  { href: '/ai/resume', icon: FileText, label: 'Resume Improver', desc: 'AI-powered resume analysis and improvement' },
+  { href: '/ai/cover-letter', icon: FilePen, label: 'Cover Letter', desc: 'Generate tailored cover letters' },
+  { href: '/ai/interview', icon: Briefcase, label: 'Interview Prep', desc: 'Practice with AI-generated questions' },
+  { href: '/ai/chat', icon: MessageSquare, label: 'AI Chat', desc: 'Get career advice from AI assistant' },
+  { href: '/ai/roadmap', icon: Map, label: 'Roadmap', desc: 'Create a personalized career roadmap' },
 ];
 
 export default function DashboardPage() {
@@ -118,17 +119,29 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <div className="bg-zinc-900 rounded-2xl border border-border p-6">
-          <h2 className="text-lg font-semibold mb-4">AI Tools</h2>
+        <div className="bg-zinc-900 rounded-2xl border border-border p-6 md:p-8">
+          <div className="flex items-center gap-3 mb-8">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
+              <Zap className="w-3.5 h-3.5" />
+              Tools
+            </span>
+            <h2 className="text-lg font-semibold">AI-Powered Tools</h2>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {aiTools.map((tool) => (
               <Link
                 key={tool.href}
                 href={tool.href}
-                className="p-4 rounded-xl border border-border hover:shadow-md transition-shadow"
+                className="group relative p-5 rounded-2xl border border-zinc-800 bg-zinc-900/50 hover:border-primary/30 transition-all duration-500 hover:shadow-[0_0_40px_-12px_rgba(99,102,241,0.25)]"
               >
-                <h3 className="font-semibold text-sm">{tool.label}</h3>
-                <p className="text-xs text-text-muted mt-1">{tool.desc}</p>
+                <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20 border border-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-primary/20 transition-all duration-500">
+                  <tool.icon className="w-5 h-5 text-primary" />
+                </div>
+                <h3 className="font-semibold text-sm text-text group-hover:text-primary transition-colors">
+                  {tool.label}
+                </h3>
+                <p className="text-xs text-text-muted mt-1.5 leading-relaxed">{tool.desc}</p>
+                <ArrowRight className="w-4 h-4 text-primary/0 group-hover:text-primary/60 absolute bottom-5 right-5 transition-all duration-500 group-hover:translate-x-0.5" />
               </Link>
             ))}
           </div>
